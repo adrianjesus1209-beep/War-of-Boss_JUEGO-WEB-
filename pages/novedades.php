@@ -156,7 +156,7 @@
     }
     var CFG_VERSION = 2;
     var cached = null;
-    try { cached = JSON.parse(sessionStorage.getItem('siteConfig')); if (cached && cached._version !== CFG_VERSION) cached = null; } catch(e) {}
+    try { cached = JSON.parse(sessionStorage.getItem('warOfBossSiteConfig')); if (cached && cached._version !== CFG_VERSION) cached = null; } catch(e) {}
     if (cached) {
       initNovedades(cached);
     } else if (window.siteConfig) {
@@ -166,7 +166,7 @@
         .then(res => res.json())
         .then(function(cfg) {
           window.siteConfig = cfg;
-          try { cfg._version = CFG_VERSION; sessionStorage.setItem('siteConfig', JSON.stringify(cfg)); } catch(e) {}
+          try { cfg._version = CFG_VERSION; sessionStorage.setItem('warOfBossSiteConfig', JSON.stringify(cfg)); } catch(e) {}
           initNovedades(cfg);
         })
         .catch(function(err) { console.error(err); });

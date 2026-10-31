@@ -334,7 +334,7 @@
 
     var CFG_VERSION = 2;
     var cachedCfg = null;
-    try { cachedCfg = JSON.parse(sessionStorage.getItem('siteConfig')); if (cachedCfg && cachedCfg._version !== CFG_VERSION) cachedCfg = null; } catch(e) {}
+    try { cachedCfg = JSON.parse(sessionStorage.getItem('warOfBossSiteConfig')); if (cachedCfg && cachedCfg._version !== CFG_VERSION) cachedCfg = null; } catch(e) {}
     if (cachedCfg) {
       applyHeaderConfig(cachedCfg);
     } else {
@@ -342,7 +342,7 @@
       .then(res => res.json())
       .then(function(cfg) {
         window.siteConfig = cfg;
-        try { cfg._version = CFG_VERSION; sessionStorage.setItem('siteConfig', JSON.stringify(cfg)); } catch(e) {}
+        try { cfg._version = CFG_VERSION; sessionStorage.setItem('warOfBossSiteConfig', JSON.stringify(cfg)); } catch(e) {}
         applyHeaderConfig(cfg);
       })
       .catch(() => {});

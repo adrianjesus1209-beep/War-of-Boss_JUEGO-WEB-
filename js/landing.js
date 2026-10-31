@@ -234,7 +234,7 @@
   const CFG_VERSION = 3;
   let cachedCfg = null;
   try {
-    cachedCfg = JSON.parse(sessionStorage.getItem('siteConfig'));
+    cachedCfg = JSON.parse(sessionStorage.getItem('warOfBossSiteConfig'));
     if (cachedCfg && cachedCfg._version !== CFG_VERSION) cachedCfg = null;
   } catch (e) {}
 
@@ -248,7 +248,7 @@
         window.siteConfig = cfg;
         try {
           cfg._version = CFG_VERSION;
-          sessionStorage.setItem('siteConfig', JSON.stringify(cfg));
+          sessionStorage.setItem('warOfBossSiteConfig', JSON.stringify(cfg));
         } catch (e) {}
         applyConfig(cfg);
       })
