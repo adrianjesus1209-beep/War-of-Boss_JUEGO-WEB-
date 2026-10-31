@@ -1,0 +1,10 @@
+<?php
+
+$db_config = [
+    'host'     => '127.0.0.1',
+    'puerto'   => '3306',
+    'db_name'  => 'base_datos_war_of_boss',
+    'usuario'  => 'tu_usuario',
+    'password' => 'tu_password',
+    'charset'  => 'utf8mb4'
+];

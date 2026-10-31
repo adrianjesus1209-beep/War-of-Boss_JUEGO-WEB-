@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>System Dashboard & Management | WAR OF BOSS</title>
+  <link rel="icon" href="../uploads/imagenes/favicon.png" type="image/png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+
+<body class="bg-[#09090b] text-[#f4f4f5] min-h-screen custom-scrollbar font-sans antialiased">
+
+  <!-- Modal de Login -->
+  <div id="login-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/90 backdrop-blur-md">
+    <div class="card w-full max-w-md p-8 border border-white/10 shadow-2xl bg-[#121215] rounded-xl">
+      <div class="text-center mb-6">
+        <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-red-950/40 border border-[#ff0033]/30 text-[#ff0033] mb-3">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          </svg>
+        </div>
+        <h1 class="text-xl font-bold tracking-wide text-white">ACCESO AL DASHBOARD</h1>
+        <p class="text-xs text-zinc-400 mt-1">Sistema de Gestión de la Landing Page</p>
+      </div>
+      <form id="login-form" class="space-y-4">
+        <div>
+          <label class="block text-xs font-medium uppercase tracking-wider text-zinc-400 mb-2">Contraseña Administrador</label>
+          <input type="password" id="login-password" placeholder="••••••••" required class="input-field">
+        </div>
+        <p id="login-error" class="text-xs text-red-500 hidden font-mono"></p>
+        <button type="submit" class="w-full btn-primary py-3 text-sm">Ingresar al Panel</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Dashboard Layout con Sidebar Lateral a la Izquierda -->
+  <div id="dashboard-content" class="hidden h-screen overflow-hidden flex">
+    
+    <!-- SIDEBAR NAVEGACIÓN LATERAL IZQUIERDA -->
+    <aside class="w-64 bg-[#121215] border-r border-white/10 flex flex-col justify-between sticky top-0 h-screen z-40 shrink-0">
+      <div class="p-6 space-y-6">
+        <!-- Logo / Marca Header -->
+        <div class="flex items-center gap-3">
+          <div class="p-1 rounded-xl bg-black/40 border border-white/10 flex items-center justify-center">
+            <img id="admin-sidebar-logo" src="../uploads/imagenes/logo_oscuro.webp" alt="Logo" class="h-8 w-auto object-contain">
+          </div>
+          <div>
+            <h2 class="font-bold text-sm text-white tracking-wide leading-tight">SYSTEM ADMIN</h2>
+            <p class="text-[10px] text-zinc-400 font-mono">War of Boss</p>
+          </div>
+        </div>
+
+        <!-- Menú de Navegación Vertical con Pestañas Apartadas -->
+        <nav class="space-y-1 pt-4 border-t border-white/5">
+          <p class="text-[10px] font-bold text-zinc-500 uppercase tracking-wider px-3 mb-2">Módulos del Sistema</p>
+          
+          <!-- Pestaña 1: Estadísticas -->
+          <button class="tab-btn w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-lg active text-xs" data-tab="metricas">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-[#ff0033]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            </svg>
+            Estadísticas & Métricas
+          </button>
+
+          <!-- Pestaña 2: General & Hero -->
+          <button class="tab-btn w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs" data-tab="general">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+            General & Hero
+          </button>
+          
+          <!-- Pestaña 3: Características -->
+          <button class="tab-btn w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs" data-tab="caracteristicas">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+            </svg>
+            Características (1-2-3)
+          </button>
+
+          <!-- Pestaña 4: Novedades -->
+          <button class="tab-btn w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs" data-tab="novedades">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+            </svg>
+            Novedades
+          </button>
+
+          <!-- Pestaña 5: Redes & Descargas -->
+          <button class="tab-btn w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs" data-tab="redes">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+            </svg>
+            Redes & Descargas
+          </button>
+
+          <!-- Pestaña 6: Imágenes & Logos -->
+          <button class="tab-btn w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs" data-tab="multimedia">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            Imágenes & Logos
+          </button>
+
+          <!-- Pestaña 7: Galería Carrusel 3D -->
+          <button class="tab-btn w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs" data-tab="galeria">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+            </svg>
+            Galería Carrusel 3D
+          </button>
+
+          <!-- Pestaña 8: Audios & Sonidos -->
+          <button class="tab-btn w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs" data-tab="audios">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+            </svg>
+            Audios & Música
+          </button>
+
+          <!-- Pestaña 9: Registro de IPs -->
+          <button class="tab-btn w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs" data-tab="registro-ips">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            Registro de IPs
+          </button>
+        </nav>
+      </div>
+
+      <!-- Footer del Sidebar Lateral -->
+      <div class="p-4 border-t border-white/10 space-y-2">
+        <a href="../" target="_blank" class="btn-secondary w-full text-xs flex items-center justify-center gap-2 py-2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+          </svg>
+          Ver Landing Page
+        </a>
+        <button id="logout-btn" class="w-full btn-primary text-xs py-2 bg-red-600 hover:bg-red-700">Cerrar Sesión</button>
+      </div>
+    </aside>
+
+    <!-- ÁREA DE CONTENIDO PRINCIPAL A LA DERECHA -->
+    <div id="main-content-scroll" class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+      
+      <!-- Topbar Header -->
+      <header class="border-b border-white/10 bg-[#121215]/80 backdrop-blur-md sticky top-0 z-30 px-8 py-4 flex items-center justify-between">
+        <div>
+          <h1 class="text-lg font-bold text-white tracking-wide">PANEL DE CONTROL GENERAL</h1>
+          <p class="text-xs text-zinc-400">Administración externa de contenidos y métricas del sistema</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-xs text-zinc-300 font-mono">Servidor Activo (Localhost)</span>
+        </div>
+      </header>
+
+      <!-- Main Workspace -->
+      <main class="px-8 py-6 space-y-6 flex-1">
+        
+        <!-- Toast Notification -->
+        <div id="toast" class="fixed bottom-6 right-6 z-50 hidden bg-[#18181b] border border-[#ff0033] text-white px-5 py-3 rounded-lg shadow-xl font-mono text-xs flex items-center gap-3">
+          <span id="toast-message">Guardado con éxito</span>
+        </div>
+
+        <!-- Botón Flotante con Flecha Abajo (Aviso y Desplazamiento a Guardar Cambios) -->
+        <button id="floating-scroll-down-btn" type="button" class="fixed bottom-24 right-8 z-50 hidden items-center gap-2 bg-[#ff0033] text-white px-4 py-2.5 rounded-full shadow-2xl border border-white/30 font-bold text-xs transition-all duration-300 hover:scale-105 hover:bg-red-600 animate-bounce cursor-pointer">
+          <span class="font-sans text-[11px] tracking-tight">Cambios pendientes ↓ Ir a Guardar</span>
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+          </svg>
+        </button>
+
+        <!-- Modal de Imagen Actualizada -->
+        <div id="modal-imagen" class="fixed inset-0 z-[60] hidden items-center justify-center bg-black/80 backdrop-blur-sm">
+          <div class="bg-[#18181b] border border-white/10 rounded-xl shadow-2xl max-w-md w-full mx-4 overflow-hidden">
+            <div class="p-6">
+              <div class="flex items-center gap-3 mb-4">
+                <div class="p-2 bg-emerald-950/50 border border-emerald-500/30 rounded-lg">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <h3 class="text-sm font-bold text-white uppercase tracking-wider">Imagen Actualizada</h3>
+              </div>
+              <div class="mb-4">
+                <p id="modal-imagen-recurso" class="text-xs text-zinc-400 mb-3">Se actualizó correctamente:</p>
+                <div class="bg-black/40 border border-white/5 rounded-lg p-3 flex items-center justify-center">
+                  <img id="modal-imagen-preview" src="" alt="Preview" class="max-h-48 max-w-full rounded object-contain">
+                </div>
+              </div>
+              <p id="modal-imagen-ruta" class="text-[11px] text-zinc-500 font-mono break-all mb-4"></p>
+              <button id="modal-imagen-cerrar" class="w-full btn-primary py-2.5 text-xs">Cerrar</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- MÓDULO APARTADO 1: ESTADÍSTICAS & MÉTRICAS -->
+        <div id="tab-metricas" class="tab-content space-y-6">
+          <div class="border-b border-white/10 pb-4">
+            <div>
+              <h2 class="text-base font-bold text-white uppercase tracking-wider">Métricas & Analíticas del Sistema</h2>
+              <p class="text-xs text-zinc-400">Monitoreo dinámico en vivo</p>
+            </div>
+          </div>
+
+          <!-- Tarjetas KPI -->
+          <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- Stat Card 1 -->
+            <div class="card p-4 flex items-center justify-between border-l-4 border-l-[#ff0033]">
+              <div>
+                <p class="text-xs text-zinc-400 font-medium uppercase tracking-wider">Visitas Reales Totales</p>
+                <h3 id="stat-visitas-count" class="text-2xl font-bold text-white mt-1">0</h3>
+                <span class="text-[11px] text-emerald-400 font-medium flex items-center gap-1 mt-1">
+                  ● <span class="text-zinc-400 font-normal">Contador en vivo</span>
+                </span>
+              </div>
+              <div class="p-3 bg-red-950/40 border border-[#ff0033]/20 rounded-xl text-[#ff0033]">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+              </div>
+            </div>
+
+            <!-- Stat Card 2 -->
+            <div class="card p-4 flex items-center justify-between border-l-4 border-l-[#ff0033]">
+              <div>
+                <p class="text-xs text-zinc-400 font-medium uppercase tracking-wider">Descargas Clicadas</p>
+                <h3 id="stat-descargas-count" class="text-2xl font-bold text-white mt-1">0</h3>
+                <span class="text-[11px] text-emerald-400 font-medium flex items-center gap-1 mt-1">
+                  ● <span class="text-zinc-400 font-normal">Conversión real</span>
+                </span>
+              </div>
+              <div class="p-3 bg-red-950/40 border border-[#ff0033]/20 rounded-xl text-[#ff0033]">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+              </div>
+            </div>
+
+            <!-- Stat Card 3 -->
+            <div class="card p-4 flex items-center justify-between border-l-4 border-l-[#ff0033]">
+              <div>
+                <p class="text-xs text-zinc-400 font-medium uppercase tracking-wider">Publicaciones / Novedades</p>
+                <h3 id="stat-novedades-count" class="text-2xl font-bold text-white mt-1">0</h3>
+                <span class="text-[11px] text-zinc-400 font-normal flex items-center gap-1 mt-1">
+                  Activas en landing
+                </span>
+              </div>
+              <div class="p-3 bg-red-950/40 border border-[#ff0033]/20 rounded-xl text-[#ff0033]">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                </svg>
+              </div>
+            </div>
+
+            <!-- Stat Card 4 -->
+            <div class="card p-4 flex items-center justify-between border-l-4 border-l-[#ff0033]">
+              <div>
+                <p class="text-xs text-zinc-400 font-medium uppercase tracking-wider">Usuarios Únicos (IPs)</p>
+                <h3 id="stat-usuarios-count" class="text-2xl font-bold text-white mt-1">0</h3>
+                <span class="text-[11px] text-emerald-400 font-medium flex items-center gap-1 mt-1">
+                  ● <span class="text-zinc-400 font-normal">Base de Datos MySQL</span>
+                </span>
+              </div>
+              <div class="p-3 bg-red-950/40 border border-[#ff0033]/20 rounded-xl text-[#ff0033]">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+              </div>
+            </div>
+          </section>
+
+          <!-- Gráfico & Host Status -->
+          <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="card lg:col-span-2 p-5">
+              <div class="flex items-center justify-between mb-4">
+                <div>
+                  <h3 class="text-sm font-bold text-white uppercase tracking-wider">Rendimiento de Tráfico & Interacción</h3>
+                  <p id="chart-range-label" class="text-xs text-zinc-400">Últimos 7 días</p>
+                </div>
+                <span class="text-xs text-[#ff0033] bg-red-950/50 px-2.5 py-1 rounded border border-[#ff0033]/30 font-mono">Live Analytics</span>
+              </div>
+              <div class="flex flex-wrap items-center gap-2 mb-3">
+                <button class="period-btn active" data-days="7">7D</button>
+                <button class="period-btn" data-days="30">30D</button>
+                <button class="period-btn" data-days="90">90D</button>
+                <button class="period-btn" data-days="0">Todo</button>
+                <div class="w-px h-4 bg-white/10 mx-1"></div>
+                <input type="date" id="chart-date-start" class="input-field text-xs" style="width:auto;padding:0.3rem 0.5rem">
+                <span class="text-zinc-500 text-xs">—</span>
+                <input type="date" id="chart-date-end" class="input-field text-xs" style="width:auto;padding:0.3rem 0.5rem">
+                <button id="chart-apply-range" class="btn-secondary text-xs">Aplicar</button>
+              </div>
+              <div class="h-64 w-full">
+                <canvas id="analyticsChart"></canvas>
+              </div>
+            </div>
+
+            <!-- Panel de Estado del Servidor -->
+            <div class="card p-5 space-y-4">
+              <h3 class="text-sm font-bold text-white uppercase tracking-wider border-b border-white/10 pb-2">Estado del Host</h3>
+              <div class="space-y-3">
+                <div class="flex justify-between text-xs">
+                  <span class="text-zinc-400">Almacenamiento del Proyecto</span>
+                  <span id="host-disk-text" class="text-white font-mono">Cargando...</span>
+                </div>
+                <div class="flex justify-between text-xs">
+                  <span class="text-zinc-400">Servidor / Dominio</span>
+                  <span id="host-name-text" class="text-emerald-400 font-mono">Detectando...</span>
+                </div>
+                <div class="flex justify-between text-xs">
+                  <span class="text-zinc-400">Motor PHP</span>
+                  <span id="host-php-text" class="text-zinc-200 font-mono">Detectando...</span>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <!-- FORMULARIO GENERAL PARA EDICIÓN DE PESTAÑAS -->
+        <form id="config-form">
+          <!-- TAB 2: GENERAL (CON BOTÓN EDITAR / COLAPSABLE) -->
+          <div id="tab-general" class="tab-content hidden space-y-6">
+            <div class="card p-6 space-y-4">
+              <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                <div>
+                  <h3 class="text-sm font-bold text-white uppercase tracking-wider">Configuración General del Juego</h3>
+                  <p class="text-xs text-zinc-400">Títulos principales del Hero y textos del botón</p>
+                </div>
+                <button type="button" id="toggle-edit-general" class="btn-secondary text-xs flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                  </svg>
+                  <span>Editar</span>
+                </button>
+              </div>
+
+              <!-- Resumen Visual (Visible cuando está colapsado) -->
+              <div id="general-summary" class="p-4 bg-[#121215] rounded-lg border border-white/5 space-y-2">
+                <div class="flex justify-between items-center text-xs">
+                  <span class="text-zinc-500 uppercase tracking-wider">Título Actual:</span>
+                  <span id="summary-gen-titulo" class="text-white font-bold font-mono">--</span>
+                </div>
+                <div class="flex justify-between items-center text-xs border-t border-white/5 pt-2">
+                  <span class="text-zinc-500 uppercase tracking-wider">Subtítulo Actual:</span>
+                  <span id="summary-gen-subtitulo" class="text-zinc-300 font-mono">--</span>
+                </div>
+              </div>
+
+              <!-- Formulario de Edición (Oculto hasta dar clic en Editar) -->
+              <div id="general-edit-fields" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                <div>
+                  <label class="block text-xs font-medium text-zinc-400 mb-1">Título Principal (Glitch)</label>
+                  <input type="text" id="gen-titulo" class="input-field">
+                </div>
+                <div>
+                  <label class="block text-xs font-medium text-zinc-400 mb-1">Subtítulo / Eslogan</label>
+                  <input type="text" id="gen-subtitulo" class="input-field">
+                </div>
+                <div>
+                  <label class="block text-xs font-medium text-zinc-400 mb-1">Texto Botón de Descarga</label>
+                  <input type="text" id="gen-boton-descarga" class="input-field">
+                </div>
+                <div>
+                  <label class="block text-xs font-medium text-zinc-400 mb-1">Subtexto Botón de Descarga</label>
+                  <input type="text" id="gen-subtexto-descarga" class="input-field">
+                </div>
+              </div>
+
+              <!-- Barra de Guardado Específica de Sección (General) -->
+              <div class="flex items-center justify-between pt-4 border-t border-white/10 mt-6">
+                <div class="flex items-center gap-2 text-xs font-mono">
+                  <span id="status-dot-general" class="w-2 h-2 rounded-full bg-zinc-600 transition-all"></span>
+                  <span id="status-text-general" class="text-zinc-500 font-sans transition-all">Sin cambios en General</span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <button type="button" class="btn-cancel-section py-2.5 px-4 text-xs font-bold uppercase tracking-wider rounded-lg flex items-center gap-1.5 transition-all duration-300 bg-zinc-800/60 text-zinc-500 border border-white/5 opacity-40 cursor-not-allowed pointer-events-none" data-section="general" disabled>
+                    <span>Cancelar</span>
+                  </button>
+                  <button type="button" class="btn-save-section py-2.5 px-6 text-xs font-bold uppercase tracking-wider rounded-lg flex items-center gap-2 transition-all duration-300 bg-zinc-800/60 text-zinc-500 border border-white/5 opacity-40 cursor-not-allowed pointer-events-none" data-section="general" disabled>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+                    </svg>
+                    <span>Guardar General</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 3: CARACTERÍSTICAS (CON BOTÓN EDITAR POR CADA UNA) -->
+          <div id="tab-caracteristicas" class="tab-content hidden space-y-6">
+            <div class="card p-6">
+              <h3 class="text-sm font-bold text-white uppercase tracking-wider mb-4 border-b border-white/10 pb-2">Las 3 Características Principales</h3>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Característica 1 -->
+                <div class="bg-[#121215] p-4 rounded-lg border border-white/5 space-y-3">
+                  <div class="flex items-center justify-between border-b border-white/5 pb-2">
+                    <span class="text-xs font-mono font-bold text-[#ff0033]">CARACTERÍSTICA 01</span>
+                    <button type="button" class="btn-secondary text-[11px] py-1 px-2.5 toggle-feat-btn" data-target="feat-0-edit">Editar</button>
+                  </div>
+                  <!-- Resumen colapsado -->
+                  <div id="feat-0-summary" class="text-xs text-zinc-300 font-medium">--</div>
+                  <!-- Edición oculta -->
+                  <div id="feat-0-edit" class="hidden space-y-3 pt-2">
+                    <div>
+                      <label class="block text-xs text-zinc-400 mb-1">Título</label>
+                      <input type="text" id="feat-0-titulo" class="input-field">
+                    </div>
+                    <div>
+                      <label class="block text-xs text-zinc-400 mb-1">Descripción</label>
+                      <textarea id="feat-0-desc" rows="3" class="input-field"></textarea>
+                    </div>
+                    <div>
+                      <label class="block text-xs text-zinc-400 mb-1">Imagen (opcional)</label>
+                      <div class="rounded-lg overflow-hidden border border-white/5 bg-black/40 mb-2" style="height:120px">
+                        <img id="preview-feat-0" src="" alt="Preview Característica 01" class="w-full h-full object-cover" style="display:none">
+                        <div id="preview-feat-0-placeholder" class="w-full h-full flex items-center justify-center text-zinc-600 text-xs">Sin imagen</div>
+                      </div>
+                      <input type="text" id="feat-0-imagen" class="input-field text-xs font-mono" placeholder="Ruta o URL de la imagen">
+                      <div class="flex items-center gap-2 mt-2">
+                        <input type="file" id="file-feat-0" accept="image/*" class="hidden">
+                        <button type="button" onclick="document.getElementById('file-feat-0').click()" class="btn-secondary text-xs w-full">Subir / Reemplazar Imagen</button>
+                        <span id="status-feat-0" class="text-xs text-zinc-500"></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Característica 2 -->
+                <div class="bg-[#121215] p-4 rounded-lg border border-white/5 space-y-3">
+                  <div class="flex items-center justify-between border-b border-white/5 pb-2">
+                    <span class="text-xs font-mono font-bold text-[#0040ff]">CARACTERÍSTICA 02</span>
+                    <button type="button" class="btn-secondary text-[11px] py-1 px-2.5 toggle-feat-btn" data-target="feat-1-edit">Editar</button>
+                  </div>
+                  <!-- Resumen colapsado -->
+                  <div id="feat-1-summary" class="text-xs text-zinc-300 font-medium">--</div>
+                  <!-- Edición oculta -->
+                  <div id="feat-1-edit" class="hidden space-y-3 pt-2">
+                    <div>
+                      <label class="block text-xs text-zinc-400 mb-1">Título</label>
+                      <input type="text" id="feat-1-titulo" class="input-field">
+                    </div>
+                    <div>
+                      <label class="block text-xs text-zinc-400 mb-1">Descripción</label>
+                      <textarea id="feat-1-desc" rows="3" class="input-field"></textarea>
+                    </div>
+                    <div>
+                      <label class="block text-xs text-zinc-400 mb-1">Imagen (opcional)</label>
+                      <div class="rounded-lg overflow-hidden border border-white/5 bg-black/40 mb-2" style="height:120px">
+                        <img id="preview-feat-1" src="" alt="Preview Característica 02" class="w-full h-full object-cover" style="display:none">
+                        <div id="preview-feat-1-placeholder" class="w-full h-full flex items-center justify-center text-zinc-600 text-xs">Sin imagen</div>
+                      </div>
+                      <input type="text" id="feat-1-imagen" class="input-field text-xs font-mono" placeholder="Ruta o URL de la imagen">
+                      <div class="flex items-center gap-2 mt-2">
+                        <input type="file" id="file-feat-1" accept="image/*" class="hidden">
+                        <button type="button" onclick="document.getElementById('file-feat-1').click()" class="btn-secondary text-xs w-full">Subir / Reemplazar Imagen</button>
+                        <span id="status-feat-1" class="text-xs text-zinc-500"></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Característica 3 -->
+                <div class="bg-[#121215] p-4 rounded-lg border border-white/5 space-y-3">
+                  <div class="flex items-center justify-between border-b border-white/5 pb-2">
+                    <span class="text-xs font-mono font-bold text-[#ff0033]">CARACTERÍSTICA 03</span>
+                    <button type="button" class="btn-secondary text-[11px] py-1 px-2.5 toggle-feat-btn" data-target="feat-2-edit">Editar</button>
+                  </div>
+                  <!-- Resumen colapsado -->
+                  <div id="feat-2-summary" class="text-xs text-zinc-300 font-medium">--</div>
+                  <!-- Edición oculta -->
+                  <div id="feat-2-edit" class="hidden space-y-3 pt-2">
+                    <div>
+                      <label class="block text-xs text-zinc-400 mb-1">Título</label>
+                      <input type="text" id="feat-2-titulo" class="input-field">
+                    </div>
+                    <div>
+                      <label class="block text-xs text-zinc-400 mb-1">Descripción</label>
+                      <textarea id="feat-2-desc" rows="3" class="input-field"></textarea>
+                    </div>
+                    <div>
+                      <label class="block text-xs text-zinc-400 mb-1">Imagen (opcional)</label>
+                      <div class="rounded-lg overflow-hidden border border-white/5 bg-black/40 mb-2" style="height:120px">
+                        <img id="preview-feat-2" src="" alt="Preview Característica 03" class="w-full h-full object-cover" style="display:none">
+                        <div id="preview-feat-2-placeholder" class="w-full h-full flex items-center justify-center text-zinc-600 text-xs">Sin imagen</div>
+                      </div>
+                      <input type="text" id="feat-2-imagen" class="input-field text-xs font-mono" placeholder="Ruta o URL de la imagen">
+                      <div class="flex items-center gap-2 mt-2">
+                        <input type="file" id="file-feat-2" accept="image/*" class="hidden">
+                        <button type="button" onclick="document.getElementById('file-feat-2').click()" class="btn-secondary text-xs w-full">Subir / Reemplazar Imagen</button>
+                        <span id="status-feat-2" class="text-xs text-zinc-500"></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Barra de Guardado Específica de Sección (Características) -->
+              <div class="flex items-center justify-between pt-4 border-t border-white/10 mt-6">
+                <div class="flex items-center gap-2 text-xs font-mono">
+                  <span id="status-dot-caracteristicas" class="w-2 h-2 rounded-full bg-zinc-600 transition-all"></span>
+                  <span id="status-text-caracteristicas" class="text-zinc-500 font-sans transition-all">Sin cambios en Características</span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <button type="button" class="btn-cancel-section py-2.5 px-4 text-xs font-bold uppercase tracking-wider rounded-lg flex items-center gap-1.5 transition-all duration-300 bg-zinc-800/60 text-zinc-500 border border-white/5 opacity-40 cursor-not-allowed pointer-events-none" data-section="caracteristicas" disabled>
+                    <span>Cancelar</span>
+                  </button>
+                  <button type="button" class="btn-save-section py-2.5 px-6 text-xs font-bold uppercase tracking-wider rounded-lg flex items-center gap-2 transition-all duration-300 bg-zinc-800/60 text-zinc-500 border border-white/5 opacity-40 cursor-not-allowed pointer-events-none" data-section="caracteristicas" disabled>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+                    </svg>
+                    <span>Guardar Características</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 4: NOVEDADES -->
+          <div id="tab-novedades" class="tab-content hidden space-y-6">
+            <div class="card p-6 space-y-4">
+              <div class="flex items-center justify-between mb-4">
+                <div>
+                  <h3 class="text-sm font-bold text-white uppercase tracking-wider">Transmisiones del Umbral (Novedades)</h3>
+                  <p class="text-xs text-zinc-400">Haz clic en "Editar" en cualquier publicación para desplegar sus campos</p>
+                </div>
+                <button type="button" id="add-novedad-btn" class="btn-primary text-xs">+ Agregar Novedad</button>
+              </div>
+              <div id="novedades-container" class="space-y-4">
+                <!-- Novedades dinámicas con modo colapsado y botón Editar -->
+              </div>
+
+              <!-- Barra de Guardado Específica de Sección (Novedades) -->
+              <div class="flex items-center justify-between pt-4 border-t border-white/10 mt-6">
+                <div class="flex items-center gap-2 text-xs font-mono">
+                  <span id="status-dot-novedades" class="w-2 h-2 rounded-full bg-zinc-600 transition-all"></span>
+                  <span id="status-text-novedades" class="text-zinc-500 font-sans transition-all">Sin cambios en Novedades</span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <button type="button" class="btn-cancel-section py-2.5 px-4 text-xs font-bold uppercase tracking-wider rounded-lg flex items-center gap-1.5 transition-all duration-300 bg-zinc-800/60 text-zinc-500 border border-white/5 opacity-40 cursor-not-allowed pointer-events-none" data-section="novedades" disabled>
+                    <span>Cancelar</span>
+                  </button>
+                  <button type="button" class="btn-save-section py-2.5 px-6 text-xs font-bold uppercase tracking-wider rounded-lg flex items-center gap-2 transition-all duration-300 bg-zinc-800/60 text-zinc-500 border border-white/5 opacity-40 cursor-not-allowed pointer-events-none" data-section="novedades" disabled>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+                    </svg>
+                    <span>Guardar Novedades</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 5: REDES & DESCARGAS -->
+          <div id="tab-redes" class="tab-content hidden space-y-6">
+            <div class="card p-6 space-y-6">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h3 class="text-sm font-bold text-white uppercase tracking-wider">Enlaces Externos & Descarga Directa</h3>
+                  <p class="text-xs text-zinc-400">Agrega hasta 10 sitios. Puedes editar el nombre y la URL de cada uno, o eliminarlo.</p>
+                </div>
+                <button type="button" id="add-red-btn" class="btn-primary text-xs flex items-center gap-1.5">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                  </svg>
+                  <span>Agregar Sitio</span>
+                </button>
+              </div>
+
+              <!-- Enlace de Descarga Principal (fijo, no elimnable) -->
+              <div class="bg-[#121215] p-5 rounded-lg border border-[#ff0033]/30 space-y-3">
+                <div class="flex items-center gap-3 mb-1">
+                  <span class="p-2 bg-red-950/60 border border-[#ff0033]/30 rounded-lg text-[#ff0033]">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                  </span>
+                  <div>
+                    <h4 class="text-xs font-bold text-white uppercase tracking-wider">Botón Principal "DESCARGAR DEMO" <span class="text-[#ff0033]">★ Fijo</span></h4>
+                    <p class="text-[11px] text-zinc-400">Enlace a Google Drive, Mega, MediaFire o instalador directo</p>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2">
+                  <input type="text" id="red-enlace-descarga" class="input-field text-xs font-mono flex-1" placeholder="https://drive.google.com/file/d/TU_ID_DE_ARCHIVO/view">
+                  <button type="button" class="btn-secondary text-xs test-link-btn flex-shrink-0 flex items-center gap-1.5" data-input="red-enlace-descarga">
+                    <span>Probar</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Contenedor dinámico de sitios -->
+              <div id="redes-container" class="space-y-3">
+                <!-- Se renderizan dinámicamente -->
+              </div>
+
+              <!-- Barra de Guardado Específica de Sección (Redes & Descargas) -->
+              <div class="flex items-center justify-between pt-4 border-t border-white/10 mt-6">
+                <div class="flex items-center gap-2 text-xs font-mono">
+                  <span id="status-dot-redes" class="w-2 h-2 rounded-full bg-zinc-600 transition-all"></span>
+                  <span id="status-text-redes" class="text-zinc-500 font-sans transition-all">Sin cambios en Redes & Descargas</span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <button type="button" class="btn-cancel-section py-2.5 px-4 text-xs font-bold uppercase tracking-wider rounded-lg flex items-center gap-1.5 transition-all duration-300 bg-zinc-800/60 text-zinc-500 border border-white/5 opacity-40 cursor-not-allowed pointer-events-none" data-section="redes" disabled>
+                    <span>Cancelar</span>
+                  </button>
+                  <button type="button" class="btn-save-section py-2.5 px-6 text-xs font-bold uppercase tracking-wider rounded-lg flex items-center gap-2 transition-all duration-300 bg-zinc-800/60 text-zinc-500 border border-white/5 opacity-40 cursor-not-allowed pointer-events-none" data-section="redes" disabled>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+                    </svg>
+                    <span>Guardar Redes & Descargas</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 6: IMÁGENES & LOGOS (HERO & BRANDING) -->
+          <div id="tab-multimedia" class="tab-content hidden space-y-6">
+            <div class="card p-6 space-y-4">
+              <h3 class="text-sm font-bold text-white uppercase tracking-wider border-b border-white/10 pb-2">Imágenes Principales (Fondo & Logos)</h3>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Fondo Hero -->
+                <div class="bg-[#121215] p-4 rounded-lg border border-white/5 space-y-3">
+                  <label class="block text-xs font-bold text-white">Imagen de Fondo (Hero)</label>
+                  <div class="preview-box rounded-lg overflow-hidden border border-white/5 bg-black/40 mb-2" style="height:140px">
+                    <img id="preview-fondo" src="" alt="Preview Fondo" class="w-full h-full object-cover" style="display:none">
+                    <div id="preview-fondo-placeholder" class="w-full h-full flex items-center justify-center text-zinc-600 text-xs">Sin previsualización</div>
+                  </div>
+                  <input type="text" id="media-fondo" class="input-field" placeholder="Ruta local o URL ImgBB">
+                  <div class="flex items-center gap-2">
+                    <input type="file" id="file-fondo" accept="image/*" class="hidden">
+                    <button type="button" onclick="document.getElementById('file-fondo').click()" class="btn-secondary text-xs w-full">Subir Nuevo Fondo</button>
+                    <span id="status-fondo" class="text-xs text-zinc-500"></span>
+                  </div>
+                </div>
+
+                <!-- Logo Claro -->
+                <div class="bg-[#121215] p-4 rounded-lg border border-white/5 space-y-3">
+                  <label class="block text-xs font-bold text-white">Logo Claro</label>
+                  <div class="preview-box rounded-lg overflow-hidden border border-white/5 bg-black/40 mb-2" style="height:140px">
+                    <img id="preview-logo-claro" src="" alt="Preview Logo Claro" class="w-full h-full object-contain p-3" style="display:none">
+                    <div id="preview-logo-claro-placeholder" class="w-full h-full flex items-center justify-center text-zinc-600 text-xs">Sin previsualización</div>
+                  </div>
+                  <input type="text" id="media-logo-claro" class="input-field">
+                  <div class="flex items-center gap-2">
+                    <input type="file" id="file-logo-claro" accept="image/*" class="hidden">
+                    <button type="button" onclick="document.getElementById('file-logo-claro').click()" class="btn-secondary text-xs w-full">Subir Logo Claro</button>
+                    <span id="status-logo-claro" class="text-xs text-zinc-500"></span>
+                  </div>
+                </div>
+
+                <!-- Logo Oscuro -->
+                <div class="bg-[#121215] p-4 rounded-lg border border-white/5 space-y-3">
+                  <label class="block text-xs font-bold text-white">Logo Oscuro</label>
+                  <div class="preview-box rounded-lg overflow-hidden border border-white/5 bg-black/40 mb-2" style="height:140px">
+                    <img id="preview-logo-oscuro" src="" alt="Preview Logo Oscuro" class="w-full h-full object-contain p-3" style="display:none">
+                    <div id="preview-logo-oscuro-placeholder" class="w-full h-full flex items-center justify-center text-zinc-600 text-xs">Sin previsualización</div>
+                  </div>
+                  <input type="text" id="media-logo-oscuro" class="input-field">
+                  <div class="flex items-center gap-2">
+                    <input type="file" id="file-logo-oscuro" accept="image/*" class="hidden">
+                    <button type="button" onclick="document.getElementById('file-logo-oscuro').click()" class="btn-secondary text-xs w-full">Subir Logo Oscuro</button>
+                    <span id="status-logo-oscuro" class="text-xs text-zinc-500"></span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Barra de Guardado Específica de Sección (Imágenes & Logos) -->
+              <div class="flex items-center justify-between pt-4 border-t border-white/10 mt-6">
+                <div class="flex items-center gap-2 text-xs font-mono">
+                  <span id="status-dot-multimedia" class="w-2 h-2 rounded-full bg-zinc-600 transition-all"></span>
+                  <span id="status-text-multimedia" class="text-zinc-500 font-sans transition-all">Sin cambios en Imágenes & Logos</span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <button type="button" class="btn-cancel-section py-2.5 px-4 text-xs font-bold uppercase tracking-wider rounded-lg flex items-center gap-1.5 transition-all duration-300 bg-zinc-800/60 text-zinc-500 border border-white/5 opacity-40 cursor-not-allowed pointer-events-none" data-section="multimedia" disabled>
+                    <span>Cancelar</span>
+                  </button>
+                  <button type="button" class="btn-save-section py-2.5 px-6 text-xs font-bold uppercase tracking-wider rounded-lg flex items-center gap-2 transition-all duration-300 bg-zinc-800/60 text-zinc-500 border border-white/5 opacity-40 cursor-not-allowed pointer-events-none" data-section="multimedia" disabled>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+                    </svg>
+                    <span>Guardar Imágenes & Logos</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 7: GALERÍA CARRUSEL 3D (PESTAÑA APARTE CON PREVISUALIZACIÓN) -->
+          <div id="tab-galeria" class="tab-content hidden space-y-6">
+            <div class="card p-6 space-y-4">
+              <div>
+                <h3 class="text-sm font-bold text-white uppercase tracking-wider">Imágenes de la Galería 3D</h3>
+                <p class="text-xs text-zinc-400">Previsualiza y reemplaza las capturas del juego expuestas en la landing page</p>
+              </div>
+              <div id="fotos-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-2">
+                <!-- Fotos de la galería generadas dinámicamente -->
+              </div>
+
+              <!-- Barra de Guardado Específica de Sección (Galería 3D) -->
+              <div class="flex items-center justify-between pt-4 border-t border-white/10 mt-6">
+                <div class="flex items-center gap-2 text-xs font-mono">
+                  <span id="status-dot-galeria" class="w-2 h-2 rounded-full bg-zinc-600 transition-all"></span>
+                  <span id="status-text-galeria" class="text-zinc-500 font-sans transition-all">Sin cambios en Galería 3D</span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <button type="button" class="btn-cancel-section py-2.5 px-4 text-xs font-bold uppercase tracking-wider rounded-lg flex items-center gap-1.5 transition-all duration-300 bg-zinc-800/60 text-zinc-500 border border-white/5 opacity-40 cursor-not-allowed pointer-events-none" data-section="galeria" disabled>
+                    <span>Cancelar</span>
+                  </button>
+                  <button type="button" class="btn-save-section py-2.5 px-6 text-xs font-bold uppercase tracking-wider rounded-lg flex items-center gap-2 transition-all duration-300 bg-zinc-800/60 text-zinc-500 border border-white/5 opacity-40 cursor-not-allowed pointer-events-none" data-section="galeria" disabled>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+                    </svg>
+                    <span>Guardar Galería 3D</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 8: AUDIOS & MÚSICA (PESTAÑA APARTE CON REPRODUCTOR AUDIBLE) -->
+          <div id="tab-audios" class="tab-content hidden space-y-6">
+            <div class="card p-6 space-y-4">
+              <div>
+                <h3 class="text-sm font-bold text-white uppercase tracking-wider">Efectos de Sonido & Música de Fondo</h3>
+                <p class="text-xs text-zinc-400">Escucha y actualiza el sonido de clic y el tema musical ambiental</p>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+                <!-- Audio Clic -->
+                <div class="bg-[#121215] p-5 rounded-lg border border-white/5 space-y-3">
+                  <div class="flex items-center justify-between">
+                    <label class="block text-xs font-bold text-white">Efecto de Sonido Clic (MP3)</label>
+                    <span class="text-[10px] text-[#ff0033] bg-red-950/50 px-2 py-0.5 rounded font-mono">Efecto UI</span>
+                  </div>
+                  <!-- Reproductor HTML5 -->
+                  <div class="bg-black/40 p-2 rounded-lg border border-white/5">
+                    <audio id="player-audio-clic" controls class="w-full h-8"></audio>
+                  </div>
+                  <input type="text" id="media-audio-clic" class="input-field text-xs">
+                  <div class="flex items-center gap-2">
+                    <input type="file" id="file-audio-clic" accept="audio/*" class="hidden">
+                    <button type="button" onclick="document.getElementById('file-audio-clic').click()" class="btn-secondary text-xs w-full">Subir Clic Audio</button>
+                    <span id="status-audio-clic" class="text-xs text-zinc-500"></span>
+                  </div>
+                </div>
+
+                <!-- Música de Fondo -->
+                <div class="bg-[#121215] p-5 rounded-lg border border-white/5 space-y-3">
+                  <div class="flex items-center justify-between">
+                    <label class="block text-xs font-bold text-white">Música Ambiental de Fondo (MP3)</label>
+                    <span class="text-[10px] text-blue-400 bg-blue-950/50 px-2 py-0.5 rounded font-mono">BGM Ambient</span>
+                  </div>
+                  <!-- Reproductor HTML5 -->
+                  <div class="bg-black/40 p-2 rounded-lg border border-white/5">
+                    <audio id="player-audio-musica" controls class="w-full h-8"></audio>
+                  </div>
+                  <input type="text" id="media-audio-musica" class="input-field text-xs">
+                  <div class="flex items-center gap-2">
+                    <input type="file" id="file-audio-musica" accept="audio/*" class="hidden">
+                    <button type="button" onclick="document.getElementById('file-audio-musica').click()" class="btn-secondary text-xs w-full">Subir Música MP3</button>
+                    <span id="status-audio-musica" class="text-xs text-zinc-500"></span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Barra de Guardado Específica de Sección (Audios & Música) -->
+              <div class="flex items-center justify-between pt-4 border-t border-white/10 mt-6">
+                <div class="flex items-center gap-2 text-xs font-mono">
+                  <span id="status-dot-audios" class="w-2 h-2 rounded-full bg-zinc-600 transition-all"></span>
+                  <span id="status-text-audios" class="text-zinc-500 font-sans transition-all">Sin cambios en Audios & Música</span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <button type="button" class="btn-cancel-section py-2.5 px-4 text-xs font-bold uppercase tracking-wider rounded-lg flex items-center gap-1.5 transition-all duration-300 bg-zinc-800/60 text-zinc-500 border border-white/5 opacity-40 cursor-not-allowed pointer-events-none" data-section="audios" disabled>
+                    <span>Cancelar</span>
+                  </button>
+                  <button type="button" class="btn-save-section py-2.5 px-6 text-xs font-bold uppercase tracking-wider rounded-lg flex items-center gap-2 transition-all duration-300 bg-zinc-800/60 text-zinc-500 border border-white/5 opacity-40 cursor-not-allowed pointer-events-none" data-section="audios" disabled>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+                    </svg>
+                    <span>Guardar Audios & Música</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 7: REGISTRO DE IPs -->
+          <div id="tab-registro-ips" class="tab-content hidden space-y-6">
+            <div class="flex items-center justify-between border-b border-white/10 pb-4">
+              <div>
+                <h2 class="text-base font-bold text-white uppercase tracking-wider">Registro de Direcciones IP</h2>
+                <p class="text-xs text-zinc-400">Historial completo de accesos al sitio</p>
+              </div>
+              <div class="flex items-center gap-3">
+                <select id="filtro-tipo-ip" class="input-field text-xs" style="width:auto;padding:0.4rem 0.6rem">
+                  <option value="">Todos los tipos</option>
+                  <option value="visita">Solo Visitas</option>
+                  <option value="descarga">Solo Descargas</option>
+                </select>
+                <span class="text-xs text-zinc-500 font-mono" id="ip-total-label">0 registros</span>
+                <button id="btn-exportar-pdf" class="btn-primary text-xs flex items-center gap-1.5">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                  Exportar PDF
+                </button>
+              </div>
+            </div>
+
+            <div class="card p-0 overflow-hidden">
+              <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                  <thead>
+                    <tr class="border-b border-white/10 bg-[#121215]">
+                      <th class="px-5 py-3 text-[11px] font-bold text-zinc-400 uppercase tracking-wider">#</th>
+                      <th class="px-5 py-3 text-[11px] font-bold text-zinc-400 uppercase tracking-wider">Dirección IP</th>
+                      <th class="px-5 py-3 text-[11px] font-bold text-zinc-400 uppercase tracking-wider">Tipo</th>
+                      <th class="px-5 py-3 text-[11px] font-bold text-zinc-400 uppercase tracking-wider">Fecha y Hora</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tabla-ips-body" class="divide-y divide-white/5">
+                    <tr><td colspan="4" class="px-5 py-8 text-center text-xs text-zinc-500">Cargando registros...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Paginación -->
+            <div class="flex items-center justify-between">
+              <button id="ip-prev-page" class="btn-secondary text-xs" disabled>← Anterior</button>
+              <span id="ip-page-info" class="text-xs text-zinc-400 font-mono">Página 1 de 1</span>
+              <button id="ip-next-page" class="btn-secondary text-xs" disabled>Siguiente →</button>
+            </div>
+          </div>
+        </form>
+      </main>
+
+    </div>
+  </div>
+
+  <script src="js/admin.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.4/jspdf.plugin.autotable.min.js"></script>
+</body>
+
+</html>

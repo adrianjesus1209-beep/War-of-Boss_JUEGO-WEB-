@@ -1,0 +1,8 @@
+LOCAL_NO_SUBIR/
+api/config_db.php
+database/base_datos_war_of_boss.sql
+database/base_datos_threshold.sql
+*.log
+Thumbs.db
+.DS_Store
+.env

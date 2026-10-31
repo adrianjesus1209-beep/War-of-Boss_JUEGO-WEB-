@@ -1,0 +1,137 @@
+{
+    "general": {
+        "titulo": "WAR OF BOSS",
+        "subtitulo": "Domina la arena. Desafía al jefe que aprendera de tus movimientos. Sobrevive a la WAR OF BOSS",
+        "boton_descarga_texto": "DESCARGAR DEMO",
+        "subtexto_descarga": "Demo gratuita - Windows - Próximamente 2026",
+        "enlace_descarga": "https:\/\/www.mediafire.com\/file\/xo56ti9x97eshdn\/juego.rar\/file"
+    },
+    "multimedia": {
+        "fondo": "uploads\/imagenes\/fondo.webp",
+        "logo_claro": "uploads\/imagenes\/logo_claro.webp",
+        "logo_oscuro": "uploads\/imagenes\/logo_oscuro.webp",
+        "audio_clic": "uploads\/audio\/audio_clic.mp3",
+        "audio_musica": "uploads\/audio\/audio_musica.mp3",
+        "fotos": [
+            {
+                "url": "uploads\/galeria\/foto_0.webp",
+                "descripcion": "Arena de Combate: Sector Titán"
+            },
+            {
+                "url": "uploads\/galeria\/foto_1.webp",
+                "descripcion": "Despertar del Guardián Mecánico"
+            },
+            {
+                "url": "uploads\/galeria\/foto_2.webp",
+                "descripcion": "Fase de Furia: Núcleo Térmico"
+            },
+            {
+                "url": "uploads\/galeria\/foto_3.webp",
+                "descripcion": "Coliseo de las Ruinas Antiguas"
+            },
+            {
+                "url": "uploads\/galeria\/foto_4.webp",
+                "descripcion": "Arsenal y Armamento de Plasma"
+            },
+            {
+                "url": "uploads\/galeria\/foto_5.webp",
+                "descripcion": "Jefe de Élite: Centinela Carmesí"
+            },
+            {
+                "url": "uploads\/galeria\/foto_6.webp",
+                "descripcion": "Catacumbas del Vacío Blindado"
+            },
+            {
+                "url": "uploads\/galeria\/foto_7.webp",
+                "descripcion": "Evasión Táctica y Despliegue Rápido"
+            },
+            {
+                "url": "uploads\/galeria\/foto_8.webp",
+                "descripcion": "Batalla Clímax: El Soberano de Hierro"
+            },
+            {
+                "url": "uploads\/galeria\/foto_9.webp",
+                "descripcion": "Victoria en la Arena de Campeones"
+            }
+        ]
+    },
+    "redes": [
+        {
+            "nombre": "YOUTUBE",
+            "url": "https:\/\/www.youtube.com\/@Leviatan_LVTN"
+        }
+    ],
+    "novedades": [
+        {
+            "id": 1,
+            "tag": "ACTUALIZACIÓN v0.8.4",
+            "tag_color": "#1684e3",
+            "fecha": "22 JUL 2026",
+            "titulo": "NUEVAS ARENAS Y JEFES PROCEDURALES",
+            "descripcion": "Se han integrado nuevas salas de combate, patrones de ataque de furia y jefes de élite adicionales en la arena principal."
+        },
+        {
+            "id": 2,
+            "tag": "BANDA SONORA",
+            "tag_color": "#39b18d",
+            "fecha": "15 JUL 2026",
+            "titulo": "NUEVOS TEMAS CHIPTUNE & METAL 8-BIT",
+            "descripcion": "Integración de 4 nuevas pistas sintetizadas de alta intensidad para los combates decisivos contra los Señores de la Guerra."
+        },
+        {
+            "id": 3,
+            "tag": "MODO BOSS RUSH",
+            "tag_color": "#ff0033",
+            "fecha": "02 AGO 2026",
+            "titulo": "DESAFÍO CONTRA RELOJ DISPONIBLE",
+            "descripcion": "Pon a prueba tus reflejos en el nuevo modo desafío donde enfrentarás a todos los jefes consecutivamente con recursos limitados."
+        },
+        {
+            "id": 4,
+            "tag": "SISTEMA DE COMBATE",
+            "tag_color": "#f59e0b",
+            "fecha": "10 AGO 2026",
+            "titulo": "REBALANCEO DE ARMAS Y SINERGIAS",
+            "descripcion": "Ajustes en los tiempos de recarga de armas de energía y aumento en la efectividad del parry contra proyectiles pesados."
+        },
+        {
+            "id": 5,
+            "tag": "COMUNIDAD",
+            "tag_color": "#8b5cf6",
+            "fecha": "20 AGO 2026",
+            "titulo": "TABLA DE CLASIFICACIÓN GLOBAL",
+            "descripcion": "Muy pronto podrás competir por los mejores tiempos de victoria contra jefes en nuestra tabla de récords mundiales."
+        },
+        {
+            "id": 6,
+            "tag": "OPTIMIZACIÓN",
+            "tag_color": "#10b981",
+            "fecha": "05 SEP 2026",
+            "titulo": "MEJORAS DE RENDIMIENTO A 60 FPS",
+            "descripcion": "Optimización profunda del renderizado de partículas y soporte nativo para mandos retro arcade por USB."
+        }
+    ],
+    "caracteristicas": [
+        {
+            "numero": "01",
+            "color": "#ff0033",
+            "titulo": "JEFES COLOSALES",
+            "descripcion": "Enfrenta guardianes monumentales con mecánicas multifase, rutinas de furia dinámicas y patrones de ataque despiadados.",
+            "imagen": "uploads\/imagenes\/feat_0.webp"
+        },
+        {
+            "numero": "02",
+            "color": "#0040ff",
+            "titulo": "ARSENAL Y HABILIDADES",
+            "descripcion": "Domina un arsenal de armas arcanas y cibernéticas, combinando sinergias tácticas y maniobras de evasión rápida.",
+            "imagen": "uploads\/imagenes\/feat_1.webp"
+        },
+        {
+            "numero": "03",
+            "color": "#ff0033",
+            "titulo": "BANDA SONORA 8-BIT",
+            "descripcion": "Una potente partitura chiptune y metal sintetizado que se intensifica al ritmo frenético de cada combate.",
+            "imagen": "uploads\/imagenes\/feat_2.webp"
+        }
+    ]
+}
