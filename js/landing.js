@@ -414,11 +414,13 @@
 
         if (audioBar) {
           audioBar.classList.add('has-video');
+          audioBar.classList.remove('is-expanded');
           syncAudioBarUI();
         }
       } else {
         if (audioBar) {
           audioBar.classList.remove('has-video');
+          audioBar.classList.remove('is-expanded');
         }
       }
     }
@@ -428,6 +430,7 @@
 
       if (audioBar) {
         audioBar.classList.remove('has-video');
+        audioBar.classList.remove('is-expanded');
       }
 
       // Volver a silenciar el video en el fondo del hero
@@ -469,6 +472,15 @@
     if (volBtn) {
       volBtn.addEventListener('click', (e) => {
         e.stopPropagation();
+        if (!audioBar) return;
+
+        // Si la barra estaba comprimida, al darle clic se expande para editar el volumen
+        if (!audioBar.classList.contains('is-expanded')) {
+          audioBar.classList.add('is-expanded');
+          return;
+        }
+
+        // Si ya estaba expandida, alternar silencio / reactivar volumen
         if (!heroVideo) return;
         if (heroVideo.muted || heroVideo.volume === 0) {
           heroVideo.muted = false;
@@ -484,13 +496,33 @@
     }
 
     if (audioBar) {
-      audioBar.addEventListener('click', (e) => e.stopPropagation());
+      audioBar.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (e.target.closest('#hero-zoom-volume-slider')) return;
+        if (!audioBar.classList.contains('is-expanded')) {
+          audioBar.classList.add('is-expanded');
+        }
+      });
       audioBar.addEventListener('mousedown', (e) => e.stopPropagation());
     }
+
+    // Colapsar la barra al hacer click fuera
+    document.addEventListener('click', (e) => {
+      if (audioBar && audioBar.classList.contains('is-expanded')) {
+        if (!audioBar.contains(e.target)) {
+          audioBar.classList.remove('is-expanded');
+        }
+      }
+    });
 
     function toggleZoom(e) {
       // Si el click fue en un botón, enlace, tarjeta o barra interactiva, no activar/cerrar zoom
       if (e.target.closest('a, button, .feat-clickable, input, #download, #hero-zoom-audio-bar') && !e.target.closest('.hero-zoom-close')) {
+        return;
+      }
+      // Si la barra de volumen estaba expandida, un click fuera la comprime primero
+      if (audioBar && audioBar.classList.contains('is-expanded')) {
+        audioBar.classList.remove('is-expanded');
         return;
       }
       if (heroBg.classList.contains('hero-zoomed')) {

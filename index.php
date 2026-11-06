@@ -17,16 +17,18 @@ $configRaw = file_exists(__DIR__ . '/api/config.json') ? file_get_contents(__DIR
       </svg>
     </button>
 
-    <!-- Barra flotante de audio para el video en zoom -->
-    <div class="hero-zoom-audio-bar" id="hero-zoom-audio-bar" role="toolbar" aria-label="Control de volumen del video">
+    <!-- Barra flotante de audio para el video en zoom (comprimida por defecto en la esquina superior izquierda) -->
+    <div class="hero-zoom-audio-bar" id="hero-zoom-audio-bar" role="toolbar" aria-label="Control de volumen del video" title="Ajustar volumen del video">
       <button type="button" class="hero-zoom-vol-btn" id="hero-zoom-vol-btn" aria-label="Silenciar o activar volumen">
         <svg id="hero-zoom-vol-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
           <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
         </svg>
       </button>
-      <input type="range" id="hero-zoom-volume-slider" class="volume-slider hero-video-slider" min="0" max="100" value="20" aria-label="Volumen del video">
-      <span class="hero-zoom-vol-text font-retro text-sm text-white/90 min-w-[34px] text-right" id="hero-zoom-vol-text">20%</span>
+      <div class="hero-zoom-controls-body" id="hero-zoom-controls-body">
+        <input type="range" id="hero-zoom-volume-slider" class="volume-slider hero-video-slider" min="0" max="100" value="20" aria-label="Volumen del video">
+        <span class="hero-zoom-vol-text font-retro text-sm text-white/90 min-w-[34px] text-right" id="hero-zoom-vol-text">20%</span>
+      </div>
     </div>
 
     <div class="hero-bg-image"></div>
