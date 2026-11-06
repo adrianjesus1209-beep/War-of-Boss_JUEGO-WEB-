@@ -21,6 +21,11 @@
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" href="https://fonts.gstatic.com/s/pressstart2p/v16/e3t4euO8T-267oIAQAu6jDQyK3nVivM.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="https://fonts.gstatic.com/s/vt323/v18/pxiKyp0ihIEF2isfFJU.woff2" as="font" type="font/woff2" crossorigin>
+  <?php if (basename($_SERVER['SCRIPT_NAME'] ?? '') === 'index.php'): ?>
+  <link rel="preload" as="video" type="video/mp4" href="<?=$base?>uploads/imagenes/fondo.mp4">
+  <?php endif; ?>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>

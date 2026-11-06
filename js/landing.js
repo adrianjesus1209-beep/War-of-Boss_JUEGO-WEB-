@@ -143,66 +143,79 @@
     if (cfg.caracteristicas && Array.isArray(cfg.caracteristicas)) {
       const featuresGrid = document.getElementById('features');
       if (featuresGrid) {
-        featuresGrid.innerHTML = '';
-        cfg.caracteristicas.forEach((feat, idx) => {
-          const card = document.createElement('div');
-          card.className = 'pixel-border rounded-sm bg-[#18181B]/55 p-6 backdrop-blur-md transition-all hover:bg-[#1e1e22]/75 feat-clickable';
-          card.setAttribute('data-feat-index', idx);
-          card.style.cursor = 'pointer';
-          card.innerHTML = `
-            <div class="mb-3 font-pixel text-[10px]" style="color: ${feat.color || '#ff0033'}">${feat.numero || String(idx + 1).padStart(2, '0')}</div>
-            <h3 class="mb-2 font-pixel text-[10px] text-white">${cleanPixelText(feat.titulo || '')}</h3>
-            <p class="font-retro text-base leading-relaxed text-white/70">${(feat.descripcion || '').substring(0, 80)}${(feat.descripcion || '').length > 80 ? '...' : ''}</p>
-          `;
-          card.addEventListener('click', () => {
-            if (typeof window.openFeatureModal === 'function') {
-              window.openFeatureModal(feat);
-            }
+        const existingCards = featuresGrid.querySelectorAll('.feat-clickable');
+        if (existingCards.length === cfg.caracteristicas.length) {
+          existingCards.forEach((card, idx) => {
+            const feat = cfg.caracteristicas[idx];
+            card.onclick = () => {
+              if (typeof window.openFeatureModal === 'function') {
+                window.openFeatureModal(feat);
+              }
+            };
           });
-          featuresGrid.appendChild(card);
-        });
+        } else {
+          featuresGrid.innerHTML = '';
+          cfg.caracteristicas.forEach((feat, idx) => {
+            const card = document.createElement('div');
+            card.className = 'pixel-border rounded-sm bg-[#18181B]/55 p-6 backdrop-blur-md transition-all hover:bg-[#1e1e22]/75 feat-clickable';
+            card.setAttribute('data-feat-index', idx);
+            card.style.cursor = 'pointer';
+            card.innerHTML = `
+              <div class="mb-3 font-pixel text-[10px]" style="color: ${feat.color || '#ff0033'}">${feat.numero || String(idx + 1).padStart(2, '0')}</div>
+              <h3 class="mb-2 font-pixel text-[10px] text-white">${cleanPixelText(feat.titulo || '')}</h3>
+              <p class="font-retro text-base leading-relaxed text-white/70">${(feat.descripcion || '').substring(0, 80)}${(feat.descripcion || '').length > 80 ? '...' : ''}</p>
+            `;
+            card.addEventListener('click', () => {
+              if (typeof window.openFeatureModal === 'function') {
+                window.openFeatureModal(feat);
+              }
+            });
+            featuresGrid.appendChild(card);
+          });
+        }
       }
     }
 
     if (cfg.novedades && Array.isArray(cfg.novedades)) {
       const newsGrid = document.querySelector('#news .grid');
       if (newsGrid) {
-        newsGrid.innerHTML = '';
-        const top6 = cfg.novedades.slice(0, 6);
-        top6.forEach(nov => {
-          const itemDiv = document.createElement('div');
-          itemDiv.className = 'pixel-border rounded bg-zinc-800/20 p-6 backdrop-blur-sm transition-all hover:bg-zinc-800/40 flex flex-col justify-between';
+        if (newsGrid.children.length === 0) {
+          const top6 = cfg.novedades.slice(0, 6);
+          top6.forEach(nov => {
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'pixel-border rounded bg-zinc-800/20 p-6 backdrop-blur-sm transition-all hover:bg-zinc-800/40 flex flex-col justify-between';
 
-          const wrapper = document.createElement('div');
-          const header = document.createElement('div');
-          header.className = 'flex items-center justify-between mb-3';
+            const wrapper = document.createElement('div');
+            const header = document.createElement('div');
+            header.className = 'flex items-center justify-between mb-3';
 
-          const tag = document.createElement('span');
-          tag.className = 'font-pixel text-[9px]';
-          tag.style.color = nov.tag_color || '#ff0033';
-          tag.textContent = cleanPixelText(nov.tag || '');
+            const tag = document.createElement('span');
+            tag.className = 'font-pixel text-[9px]';
+            tag.style.color = nov.tag_color || '#ff0033';
+            tag.textContent = cleanPixelText(nov.tag || '');
 
-          const fecha = document.createElement('span');
-          fecha.className = 'font-retro text-xs text-white/40';
-          fecha.textContent = nov.fecha || '';
+            const fecha = document.createElement('span');
+            fecha.className = 'font-retro text-xs text-white/40';
+            fecha.textContent = nov.fecha || '';
 
-          header.appendChild(tag);
-          header.appendChild(fecha);
+            header.appendChild(tag);
+            header.appendChild(fecha);
 
-          const titulo = document.createElement('h3');
-          titulo.className = 'font-pixel text-xs text-white mb-2 leading-relaxed';
-          titulo.textContent = cleanPixelText(nov.titulo || '');
+            const titulo = document.createElement('h3');
+            titulo.className = 'font-pixel text-xs text-white mb-2 leading-relaxed';
+            titulo.textContent = cleanPixelText(nov.titulo || '');
 
-          const desc = document.createElement('p');
-          desc.className = 'font-retro text-sm text-white/60 leading-relaxed';
-          desc.textContent = nov.descripcion || '';
+            const desc = document.createElement('p');
+            desc.className = 'font-retro text-sm text-white/60 leading-relaxed';
+            desc.textContent = nov.descripcion || '';
 
-          wrapper.appendChild(header);
-          wrapper.appendChild(titulo);
-          wrapper.appendChild(desc);
-          itemDiv.appendChild(wrapper);
-          newsGrid.appendChild(itemDiv);
-        });
+            wrapper.appendChild(header);
+            wrapper.appendChild(titulo);
+            wrapper.appendChild(desc);
+            itemDiv.appendChild(wrapper);
+            newsGrid.appendChild(itemDiv);
+          });
+        }
 
         const btnContainer = document.getElementById('news-more-container');
         if (btnContainer) {
@@ -232,7 +245,7 @@
         const isVideo = cleanUrl.endsWith('.mp4') || cleanUrl.endsWith('.webm');
 
         if (isVideo && heroBgVideo) {
-          if (heroBgVideo.src !== fondoUrl && !heroBgVideo.src.endsWith(fondoUrl)) {
+          if (!heroBgVideo.src || (!heroBgVideo.src.endsWith(fondoUrl) && heroBgVideo.src !== fondoUrl)) {
             heroBgVideo.src = fondoUrl;
             heroBgVideo.load();
           }

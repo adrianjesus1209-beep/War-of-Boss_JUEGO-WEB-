@@ -1,6 +1,18 @@
 <?php 
 $base = ''; 
 $configRaw = file_exists(__DIR__ . '/api/config.json') ? file_get_contents(__DIR__ . '/api/config.json') : '{}';
+$configData = json_decode($configRaw, true) ?: [];
+
+$titulo = $configData['general']['titulo'] ?? 'WAR OF BOSS';
+$subtitulo = $configData['general']['subtitulo'] ?? 'Domina la arena. Desafía al jefe que aprendera de tus movimientos. Sobrevive a la WAR OF BOSS';
+$btnDescarga = $configData['general']['boton_descarga_texto'] ?? 'DESCARGAR DEMO';
+$subDescarga = $configData['general']['subtexto_descarga'] ?? 'Demo gratuita · Windows · Próximamente 2026';
+$enlaceDescarga = $configData['general']['enlace_descarga'] ?? '#';
+
+$fondoOscuro = $configData['multimedia']['fondo'] ?? 'uploads/imagenes/fondo.mp4';
+$fondoClaro = $configData['multimedia']['fondo_claro'] ?? 'uploads/imagenes/fondo_claro.mp4';
+$caracteristicas = $configData['caracteristicas'] ?? [];
+$novedades = $configData['novedades'] ?? [];
 ?>
 <script>window.initialConfig = <?=$configRaw?>;</script>
 <?php include 'includes/header.php'; ?>
@@ -32,7 +44,16 @@ $configRaw = file_exists(__DIR__ . '/api/config.json') ? file_get_contents(__DIR
     </div>
 
     <div class="hero-bg-image"></div>
-    <video class="hero-bg-video hidden" autoplay muted loop playsinline preload="metadata"></video>
+    <video class="hero-bg-video" autoplay muted loop playsinline preload="auto" src="<?=$fondoOscuro?>"></video>
+    <script>
+      (function() {
+        var isLight = localStorage.getItem('theme') === 'light' || (new URLSearchParams(window.location.search)).get('theme') === 'light';
+        var v = document.querySelector('.hero-bg-video');
+        if (v && isLight) {
+          v.src = '<?=$fondoClaro?>';
+        }
+      })();
+    </script>
 
     <div class="vignette"></div>
 
@@ -41,25 +62,37 @@ $configRaw = file_exists(__DIR__ . '/api/config.json') ? file_get_contents(__DIR
       <div class="fade-in mb-4 text-center">
         <h1
           class="glitch font-pixel text-xl leading-relaxed tracking-wider text-white drop-shadow-[0_0_12px_rgba(255,0,51,0.3)] sm:text-3xl lg:text-5xl"
-          data-text="WAR OF BOSS">
-          WAR OF BOSS
+          data-text="<?=htmlspecialchars($titulo)?>">
+          <?=htmlspecialchars($titulo)?>
         </h1>
       </div>
 
       <p class="fade-in fade-in-delay mb-12 text-center font-retro text-xl tracking-wide text-white/80 sm:text-3xl">
-        Domina la arena. Desafía a los titanes. Sobrevive a la guerra de jefes.
+        <?=htmlspecialchars($subtitulo)?>
       </p>
 
       <div id="features" class="fade-in fade-in-delay-2 mx-auto mb-6 grid max-w-4xl grid-cols-1 gap-4 sm:grid-cols-3">
-
+        <?php foreach ($caracteristicas as $idx => $feat): 
+          $num = $feat['numero'] ?? str_pad($idx + 1, 2, '0', STR_PAD_LEFT);
+          $col = $feat['color'] ?? '#ff0033';
+          $tit = htmlspecialchars($feat['titulo'] ?? '');
+          $desc = htmlspecialchars($feat['descripcion'] ?? '');
+          $descShort = mb_strlen($desc) > 80 ? mb_substr($desc, 0, 80) . '...' : $desc;
+        ?>
+          <div class="pixel-border rounded-sm bg-[#18181B]/55 p-6 backdrop-blur-md transition-all hover:bg-[#1e1e22]/75 feat-clickable" data-feat-index="<?=$idx?>" style="cursor: pointer;">
+            <div class="mb-3 font-pixel text-[10px]" style="color: <?=$col?>;"><?=$num?></div>
+            <h3 class="mb-2 font-pixel text-[10px] text-white"><?=$tit?></h3>
+            <p class="font-retro text-base leading-relaxed text-white/70"><?=$descShort?></p>
+          </div>
+        <?php endforeach; ?>
       </div>
 
       <div id="download" class="fade-in fade-in-delay-3 text-center">
-        <a href="javascript:void(0)" target="_blank" rel="noopener noreferrer"
+        <a href="<?=htmlspecialchars($enlaceDescarga)?>" target="_blank" rel="noopener noreferrer"
           class="neon-btn mb-4 inline-block rounded bg-[#ff0033] px-8 py-3 font-pixel text-[12px] text-white transition-all hover:bg-[#ff1a4d] sm:text-xs">
-          DESCARGAR DEMO
+          <?=htmlspecialchars($btnDescarga)?>
         </a>
-        <p class="font-retro text-sm text-white/30">Demo gratuita &middot; Windows &middot; Próximamente 2026</p>
+        <p class="font-retro text-sm text-white/30"><?=htmlspecialchars($subDescarga)?></p>
       </div>
 
     </div>
@@ -160,10 +193,29 @@ $configRaw = file_exists(__DIR__ . '/api/config.json') ? file_get_contents(__DIR
       <p class="font-retro text-base sm:text-xl text-white/60 tracking-[0.2em] mb-12">ACTUALIZACIONES DEL COMBATE</p>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-left">
-
+        <?php 
+        $topNews = array_slice($novedades, 0, 6);
+        foreach ($topNews as $nov):
+          $tagColor = $nov['tag_color'] ?? '#ff0033';
+          $tagText = htmlspecialchars($nov['tag'] ?? '');
+          $fechaText = htmlspecialchars($nov['fecha'] ?? '');
+          $titText = htmlspecialchars($nov['titulo'] ?? '');
+          $descText = htmlspecialchars($nov['descripcion'] ?? '');
+        ?>
+          <div class="pixel-border rounded bg-zinc-800/20 p-6 backdrop-blur-sm transition-all hover:bg-zinc-800/40 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="font-pixel text-[11px]" style="color: <?=$tagColor?>;"><?=$tagText?></span>
+                <span class="font-retro text-xs text-white/40"><?=$fechaText?></span>
+              </div>
+              <h3 class="font-pixel text-xs text-white mb-2 leading-relaxed"><?=$titText?></h3>
+              <p class="font-retro text-sm text-white/60 leading-relaxed"><?=$descText?></p>
+            </div>
+          </div>
+        <?php endforeach; ?>
       </div>
 
-      <div id="news-more-container" class="mt-12 text-center hidden">
+      <div id="news-more-container" class="mt-12 text-center <?= count($novedades) > 6 ? '' : 'hidden' ?>">
         <a href="pages/novedades.php" class="inline-block font-pixel text-xs text-white/50 hover:text-white transition-colors duration-300 news-glow-link">
           VER HISTORIAL COMPLETO →
         </a>
