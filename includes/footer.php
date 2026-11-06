@@ -4,8 +4,8 @@
       <div class="flex flex-col items-center justify-between gap-4 sm:flex-row">
 
         <div class="flex items-center gap-4">
-          <img src="<?=$base?>uploads/imagenes/logo_oscuro.png" alt="WAR OF BOSS" class="logo-dark h-5 sm:h-6 opacity-70">
-          <img src="<?=$base?>uploads/imagenes/logo_claro.png" alt="WAR OF BOSS" class="logo-light h-5 sm:h-6 opacity-70">
+          <img src="<?=$base?>uploads/imagenes/logo_oscuro.webp" alt="WAR OF BOSS" class="logo-dark h-5 sm:h-6 opacity-70">
+          <img src="<?=$base?>uploads/imagenes/logo_claro.webp" alt="WAR OF BOSS" class="logo-light h-5 sm:h-6 opacity-70">
         </div>
 
         <div id="footer-redes" class="flex items-center gap-5 flex-wrap">
@@ -57,8 +57,10 @@
         }
       }
     }
-    if (window.siteConfig) {
-      renderFooter(window.siteConfig);
+    const cfg = window.initialConfig || window.siteConfig;
+    if (cfg) {
+      window.siteConfig = cfg;
+      renderFooter(cfg);
     } else {
       fetch('<?=$base?>api/obtener_config.php?v=' + Date.now())
         .then(res => res.json())

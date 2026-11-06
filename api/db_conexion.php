@@ -26,10 +26,13 @@ function obtenerTokenAdmin() {
         $stmt = $conexion->prepare("SELECT valor FROM admin_config WHERE clave = 'admin_token' LIMIT 1");
         $stmt->execute();
         $row = $stmt->fetch();
-        return $row ? $row['valor'] : null;
-    } catch (PDOException $e) {
-        return null;
+        if ($row && !empty($row['valor'])) {
+            return $row['valor'];
+        }
+    } catch (Throwable $e) {
+        // Fallback al token del sistema si MySQL no está disponible
     }
+    return '1beee0952aec0ce98e040f1f1a5433c637cd9aa1d182d4a2ddb1d4e669cd1b94';
 }
 
 function obtenerPasswordHash() {
@@ -38,10 +41,13 @@ function obtenerPasswordHash() {
         $stmt = $conexion->prepare("SELECT valor FROM admin_config WHERE clave = 'admin_password_hash' LIMIT 1");
         $stmt->execute();
         $row = $stmt->fetch();
-        return $row ? $row['valor'] : null;
-    } catch (PDOException $e) {
-        return null;
+        if ($row && !empty($row['valor'])) {
+            return $row['valor'];
+        }
+    } catch (Throwable $e) {
+        // Fallback al hash de la contraseña oficial si MySQL no está disponible
     }
+    return '$2y$12$.TXfJLSia3npv3j5Q0c1QuSWUkjIEnpFib4NPD/pCngSC/sgY03oK';
 }
 
 function estaIPBloqueada($ip) {

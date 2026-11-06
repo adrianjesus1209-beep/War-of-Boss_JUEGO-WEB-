@@ -151,6 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
     renderRedes(redesArray);
 
     document.getElementById("media-fondo").value = cfg.multimedia?.fondo || "";
+    document.getElementById("media-fondo-claro").value = cfg.multimedia?.fondo_claro || "";
     document.getElementById("media-logo-claro").value = cfg.multimedia?.logo_claro || "";
     document.getElementById("media-logo-oscuro").value = cfg.multimedia?.logo_oscuro || "";
     document.getElementById("media-audio-clic").value = cfg.multimedia?.audio_clic || "";
@@ -285,27 +286,49 @@ document.addEventListener('DOMContentLoaded', () => {
     redEnlaceInput.addEventListener("input", () => setSectionDirty("redes", true));
   }
 
+  function isVideoSource(url) {
+    if (!url) return false;
+    const cleanUrl = url.split('?')[0].toLowerCase();
+    return cleanUrl.endsWith('.mp4') || cleanUrl.endsWith('.webm') || cleanUrl.includes('video/mp4') || cleanUrl.includes('video/webm');
+  }
+
   function updateImagePreviews(cfg) {
     const previewMap = [
-      { key: 'fondo', id: 'preview-fondo', placeholderId: 'preview-fondo-placeholder' },
+      { key: 'fondo', id: 'preview-fondo', videoId: 'preview-fondo-video', placeholderId: 'preview-fondo-placeholder' },
+      { key: 'fondo_claro', id: 'preview-fondo-claro', videoId: 'preview-fondo-claro-video', placeholderId: 'preview-fondo-claro-placeholder' },
       { key: 'logo_claro', id: 'preview-logo-claro', placeholderId: 'preview-logo-claro-placeholder' },
       { key: 'logo_oscuro', id: 'preview-logo-oscuro', placeholderId: 'preview-logo-oscuro-placeholder' }
     ];
     previewMap.forEach(item => {
       const imgEl = document.getElementById(item.id);
+      const videoEl = item.videoId ? document.getElementById(item.videoId) : null;
       const placeholderEl = document.getElementById(item.placeholderId);
       const src = cfg.multimedia?.[item.key];
-      if (imgEl && src) {
-        const fullSrc = (src.startsWith('http') ? src : '../' + src.replace(/^\//, '')) + '?v=' + Date.now();
-        imgEl.src = fullSrc;
-        imgEl.style.display = 'block';
-        if (placeholderEl) placeholderEl.style.display = 'none';
-        imgEl.onerror = () => {
-          imgEl.style.display = 'none';
-          if (placeholderEl) placeholderEl.style.display = 'flex';
-        };
-      } else if (imgEl) {
-        imgEl.style.display = 'none';
+
+      if (videoEl) videoEl.style.display = 'none';
+      if (imgEl) imgEl.style.display = 'none';
+
+      if (src) {
+        const fullSrc = (src.startsWith('http') || src.startsWith('blob:')) ? src : ('../' + src.replace(/^\//, '') + '?v=' + Date.now());
+        if ((item.key === 'fondo' || item.key === 'fondo_claro') && isVideoSource(src) && videoEl) {
+          videoEl.src = fullSrc;
+          videoEl.style.display = 'block';
+          videoEl.play().catch(() => {});
+          if (placeholderEl) placeholderEl.style.display = 'none';
+          videoEl.onerror = () => {
+            videoEl.style.display = 'none';
+            if (placeholderEl) placeholderEl.style.display = 'flex';
+          };
+        } else if (imgEl) {
+          imgEl.src = fullSrc;
+          imgEl.style.display = 'block';
+          if (placeholderEl) placeholderEl.style.display = 'none';
+          imgEl.onerror = () => {
+            imgEl.style.display = 'none';
+            if (placeholderEl) placeholderEl.style.display = 'flex';
+          };
+        }
+      } else {
         if (placeholderEl) placeholderEl.style.display = 'flex';
       }
     });
@@ -728,7 +751,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const rutaEl = document.getElementById("modal-imagen-ruta");
 
     const nombres = {
-      fondo: 'Imagen de Fondo (Hero)',
+      fondo: 'Fondo Hero (Modo Oscuro)',
+      fondo_claro: 'Fondo Hero (Modo Claro)',
       logo_claro: 'Logo Claro',
       logo_oscuro: 'Logo Oscuro',
     };
@@ -745,6 +769,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const previewMap = {
       fondo: 'preview-fondo',
+      fondo_claro: 'preview-fondo-claro',
       logo_claro: 'preview-logo-claro',
       logo_oscuro: 'preview-logo-oscuro'
     };
@@ -950,27 +975,38 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   const mediaInputs = [
-    { inputId: "media-fondo", imgId: "preview-fondo", placeholderId: "preview-fondo-placeholder", sec: "multimedia", key: "fondo", statusId: "status-fondo" },
+    { inputId: "media-fondo", imgId: "preview-fondo", videoId: "preview-fondo-video", placeholderId: "preview-fondo-placeholder", sec: "multimedia", key: "fondo", statusId: "status-fondo" },
+    { inputId: "media-fondo-claro", imgId: "preview-fondo-claro", videoId: "preview-fondo-claro-video", placeholderId: "preview-fondo-claro-placeholder", sec: "multimedia", key: "fondo_claro", statusId: "status-fondo-claro" },
     { inputId: "media-logo-claro", imgId: "preview-logo-claro", placeholderId: "preview-logo-claro-placeholder", sec: "multimedia", key: "logo_claro", statusId: "status-logo-claro" },
     { inputId: "media-logo-oscuro", imgId: "preview-logo-oscuro", placeholderId: "preview-logo-oscuro-placeholder", sec: "multimedia", key: "logo_oscuro", statusId: "status-logo-oscuro" }
   ];
   mediaInputs.forEach(m => {
     const inp = document.getElementById(m.inputId);
     const img = document.getElementById(m.imgId);
+    const vid = m.videoId ? document.getElementById(m.videoId) : null;
     const ph = document.getElementById(m.placeholderId);
-    if (inp && img) {
+    if (inp && (img || vid)) {
       inp.addEventListener("input", (e) => {
         setSectionDirty(m.sec, true);
         delete pendingFiles[m.key];
         const stEl = document.getElementById(m.statusId);
         if (stEl) stEl.textContent = '';
-        const src = e.target.value;
+        const src = e.target.value.trim();
+        if (vid) vid.style.display = 'none';
+        if (img) img.style.display = 'none';
+
         if (src) {
-          img.src = src.startsWith('http') ? src : '../' + src.replace(/^\//, '');
-          img.style.display = 'block';
+          const finalSrc = src.startsWith('http') ? src : '../' + src.replace(/^\//, '');
+          if ((m.key === 'fondo' || m.key === 'fondo_claro') && isVideoSource(src) && vid) {
+            vid.src = finalSrc;
+            vid.style.display = 'block';
+            vid.play().catch(() => {});
+          } else if (img) {
+            img.src = finalSrc;
+            img.style.display = 'block';
+          }
           if (ph) ph.style.display = 'none';
         } else {
-          img.style.display = 'none';
           if (ph) ph.style.display = 'flex';
         }
       });
@@ -1011,10 +1047,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const pendingGalleryFiles = {};
   const pendingAudioFiles = {};
   const pendingFeatFiles = {};
-  const IMAGE_KEYS = ['fondo', 'logo_claro', 'logo_oscuro'];
+  const IMAGE_KEYS = ['fondo', 'fondo_claro', 'logo_claro', 'logo_oscuro'];
 
   const mediaKeys = [
     { fileId: "file-fondo", inputId: "media-fondo", statusId: "status-fondo", key: "fondo", sec: "multimedia" },
+    { fileId: "file-fondo-claro", inputId: "media-fondo-claro", statusId: "status-fondo-claro", key: "fondo_claro", sec: "multimedia" },
     { fileId: "file-logo-claro", inputId: "media-logo-claro", statusId: "status-logo-claro", key: "logo_claro", sec: "multimedia" },
     { fileId: "file-logo-oscuro", inputId: "media-logo-oscuro", statusId: "status-logo-oscuro", key: "logo_oscuro", sec: "multimedia" },
     { fileId: "file-audio-clic", inputId: "media-audio-clic", statusId: "status-audio-clic", key: "audio_clic", sec: "audios" },
@@ -1028,10 +1065,21 @@ document.addEventListener('DOMContentLoaded', () => {
         if (el.files.length > 0) {
           if (IMAGE_KEYS.includes(m.key)) {
             pendingFiles[m.key] = el.files[0];
+            const file = el.files[0];
+            const isVideo = file.type.startsWith('video/') || isVideoSource(file.name);
             const previewImg = document.getElementById(m.inputId.replace('media-', 'preview-'));
+            const previewVideo = document.getElementById(m.inputId.replace('media-', 'preview-') + '-video');
             const placeholder = document.getElementById(m.inputId.replace('media-', 'preview-') + '-placeholder');
-            if (previewImg) {
-              previewImg.src = URL.createObjectURL(el.files[0]);
+
+            if (previewImg) previewImg.style.display = 'none';
+            if (previewVideo) previewVideo.style.display = 'none';
+
+            if (isVideo && previewVideo) {
+              previewVideo.src = URL.createObjectURL(file);
+              previewVideo.style.display = 'block';
+              previewVideo.play().catch(() => {});
+            } else if (previewImg) {
+              previewImg.src = URL.createObjectURL(file);
               previewImg.style.display = 'block';
             }
             if (placeholder) placeholder.style.display = 'none';
@@ -1171,6 +1219,7 @@ document.addEventListener('DOMContentLoaded', () => {
       })(),
       multimedia: {
         fondo: document.getElementById("media-fondo").value,
+        fondo_claro: document.getElementById("media-fondo-claro").value,
         logo_claro: document.getElementById("media-logo-claro").value,
         logo_oscuro: document.getElementById("media-logo-oscuro").value,
         audio_clic: document.getElementById("media-audio-clic").value,
@@ -1197,8 +1246,8 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       pendingKeys.forEach(key => {
         const file = pendingFiles[key];
-        const inputId = key === 'fondo' ? 'media-fondo' : key === 'logo_claro' ? 'media-logo-claro' : 'media-logo-oscuro';
-        const statusId = key === 'fondo' ? 'status-fondo' : key === 'logo_claro' ? 'status-logo-claro' : 'status-logo-oscuro';
+        const inputId = key === 'fondo' ? 'media-fondo' : key === 'fondo_claro' ? 'media-fondo-claro' : key === 'logo_claro' ? 'media-logo-claro' : 'media-logo-oscuro';
+        const statusId = key === 'fondo' ? 'status-fondo' : key === 'fondo_claro' ? 'status-fondo-claro' : key === 'logo_claro' ? 'status-logo-claro' : 'status-logo-oscuro';
         const antiguo = configToSave.multimedia[key];
         uploadFile(file, antiguo, key, (nuevaRuta) => {
           configToSave.multimedia[key] = nuevaRuta;
@@ -1326,9 +1375,10 @@ document.addEventListener('DOMContentLoaded', () => {
     } else if (sec === 'multimedia') {
       IMAGE_KEYS.forEach(key => { delete pendingFiles[key]; });
       document.getElementById("media-fondo").value = currentConfig.multimedia?.fondo || "";
+      document.getElementById("media-fondo-claro").value = currentConfig.multimedia?.fondo_claro || "";
       document.getElementById("media-logo-claro").value = currentConfig.multimedia?.logo_claro || "";
       document.getElementById("media-logo-oscuro").value = currentConfig.multimedia?.logo_oscuro || "";
-      ['status-fondo', 'status-logo-claro', 'status-logo-oscuro'].forEach(id => {
+      ['status-fondo', 'status-fondo-claro', 'status-logo-claro', 'status-logo-oscuro'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.textContent = '';
       });

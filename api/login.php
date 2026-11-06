@@ -28,6 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (password_verify($clave, $password_hash)) {
+        session_regenerate_id(true);
         registrarIntento($ip, true);
         $_SESSION['admin_logged_in'] = true;
         echo json_encode(['success' => true, 'mensaje' => 'Sesión iniciada correctamente']);

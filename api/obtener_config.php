@@ -14,6 +14,28 @@ if (in_array($origin, $allowed_origins)) {
 $config_path = __DIR__ . '/config.json';
 
 if (file_exists($config_path)) {
+    $last_modified = filemtime($config_path);
+    $raw_etag = md5_file($config_path);
+    $etag = '"' . $raw_etag . '"';
+    header('Last-Modified: ' . gmdate('D, d M Y H:i:s', $last_modified) . ' GMT');
+    header('ETag: ' . $etag);
+    header('Cache-Control: public, max-age=60');
+
+    $client_etag = trim($_SERVER['HTTP_IF_NONE_MATCH'] ?? '', "\"' \t\n\r\0\x0B");
+    if (!$client_etag && function_exists('apache_request_headers')) {
+        $req_headers = apache_request_headers();
+        $client_etag = trim($req_headers['If-None-Match'] ?? ($req_headers['if-none-match'] ?? ''), "\"' \t\n\r\0\x0B");
+    }
+
+    if ($client_etag && ($client_etag === $raw_etag || $client_etag === '*')) {
+        http_response_code(304);
+        exit;
+    }
+
+    if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) && strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']) >= $last_modified) {
+        http_response_code(304);
+        exit;
+    }
     echo file_get_contents($config_path);
 } else {
     http_response_code(404);

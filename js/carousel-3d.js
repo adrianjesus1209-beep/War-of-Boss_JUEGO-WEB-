@@ -47,21 +47,34 @@
 
     const easeScroll = gsap.parseEase('power2.inOut');
 
+    let ticking = false;
+    let latestProgress = 0;
+
+    function applyTransforms(progressVal) {
+      const p = easeScroll(progressVal);
+      if (progressBar) progressBar.style.transform = 'scaleX(' + progressVal + ')';
+      for (let i = 0; i < N; i++) {
+        const t = targets[i] || targets[N - 1];
+        const iScale = i === 0 ? 1 : 0.85;
+        const s = iScale + (t.s - iScale) * p;
+        setTf[i]('translate3d(' + (t.x * p).toFixed(2) + 'px,' + (t.y * p).toFixed(2) + 'px,' + (t.z * p).toFixed(2) + 'px) rotateY(' + (t.rY * p).toFixed(2) + 'deg) rotateZ(' + (t.rZ * p).toFixed(2) + 'deg) scale(' + s.toFixed(3) + ')');
+        const iOp = i === 0 ? 1 : 0;
+        setOpacity[i](Number((iOp + (1 - iOp) * p).toFixed(3)));
+      }
+      ticking = false;
+    }
+
     ScrollTrigger.create({
       trigger: section,
       start: 'top top',
       end: 'bottom bottom',
-      scrub: 2,
+      scrub: 1,
+      fastScrollEnd: true,
       onUpdate: (self) => {
-        const p = easeScroll(self.progress);
-        if (progressBar) progressBar.style.transform = 'scaleX(' + self.progress + ')';
-        for (let i = 0; i < N; i++) {
-          const t = targets[i] || targets[N - 1];
-          const iScale = i === 0 ? 1 : 0.85;
-          const s = iScale + (t.s - iScale) * p;
-          setTf[i]('translate3d(' + (t.x * p) + 'px,' + (t.y * p) + 'px,' + (t.z * p) + 'px) rotateY(' + (t.rY * p) + 'deg) rotateZ(' + (t.rZ * p) + 'deg) scale(' + s + ')');
-          const iOp = i === 0 ? 1 : 0;
-          setOpacity[i](iOp + (1 - iOp) * p);
+        latestProgress = self.progress;
+        if (!ticking) {
+          ticking = true;
+          requestAnimationFrame(() => applyTransforms(latestProgress));
         }
       }
     });
@@ -104,14 +117,27 @@
       return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
     }
 
+    let tickingMobile = false;
+    let latestMobileProgress = 0;
+
+    function applyMobileTransforms(progressVal) {
+      const p = easeInOut(progressVal);
+      stage.style.transform = 'translate3d(' + (viewportCenter - p * maxScrollX).toFixed(1) + 'px, 0, 0)';
+      tickingMobile = false;
+    }
+
     ScrollTrigger.create({
       trigger: section,
       start: 'top top',
       end: 'bottom bottom',
-      scrub: 4.5,
+      scrub: 1.2,
+      fastScrollEnd: true,
       onUpdate: (self) => {
-        const p = easeInOut(self.progress);
-        stage.style.transform = 'translate3d(' + (viewportCenter - p * maxScrollX) + 'px, 0, 0)';
+        latestMobileProgress = self.progress;
+        if (!tickingMobile) {
+          tickingMobile = true;
+          requestAnimationFrame(() => applyMobileTransforms(latestMobileProgress));
+        }
       }
     });
   }

@@ -1,4 +1,8 @@
-<?php $base = '../'; ?>
+<?php 
+$base = '../'; 
+$configRaw = file_exists(__DIR__ . '/../api/config.json') ? file_get_contents(__DIR__ . '/../api/config.json') : '{}';
+?>
+<script>window.initialConfig = <?=$configRaw?>;</script>
 <?php include __DIR__ . '/../includes/header.php'; ?>
 
   <style>
@@ -59,6 +63,16 @@
     let currentPage = parseInt(new URLSearchParams(window.location.search).get('page')) || 1;
     const itemsPerPage = 6;
 
+    function cleanPixelText(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/Í/g, 'I')
+        .replace(/Á/g, 'A')
+        .replace(/É/g, 'E')
+        .replace(/Ó/g, 'O')
+        .replace(/Ú/g, 'U');
+    }
+
     function renderPage(page) {
       if (!currentConfig || !currentConfig.novedades) return;
       currentPage = page;
@@ -94,7 +108,7 @@
           const tag = document.createElement('span');
           tag.className = 'font-pixel text-[11px]';
           tag.style.color = nov.tag_color || '#ff0033';
-          tag.textContent = nov.tag || '';
+          tag.textContent = cleanPixelText(nov.tag || '');
 
           const fecha = document.createElement('span');
           fecha.className = 'font-retro text-xs text-white/40 nov-card-date transition-colors duration-300';
@@ -105,7 +119,7 @@
 
           const titulo = document.createElement('h3');
           titulo.className = 'font-pixel text-xs text-white mb-2 leading-relaxed nov-card-title transition-colors duration-300';
-          titulo.textContent = nov.titulo || '';
+          titulo.textContent = cleanPixelText(nov.titulo || '');
 
           const desc = document.createElement('p');
           desc.className = 'font-retro text-sm text-white/60 leading-relaxed nov-card-desc transition-colors duration-300';
@@ -152,15 +166,20 @@
 
     function initNovedades(cfg) {
       currentConfig = cfg;
-      renderPage(1);
+      renderPage(currentPage);
     }
-    var CFG_VERSION = 2;
+    var CFG_VERSION = 3;
+    var initial = window.initialConfig || window.siteConfig;
     var cached = null;
     try { cached = JSON.parse(sessionStorage.getItem('warOfBossSiteConfig')); if (cached && cached._version !== CFG_VERSION) cached = null; } catch(e) {}
-    if (cached) {
+
+    if (initial) {
+      window.siteConfig = initial;
+      try { initial._version = CFG_VERSION; sessionStorage.setItem('warOfBossSiteConfig', JSON.stringify(initial)); } catch(e) {}
+      initNovedades(initial);
+    } else if (cached) {
+      window.siteConfig = cached;
       initNovedades(cached);
-    } else if (window.siteConfig) {
-      initNovedades(window.siteConfig);
     } else {
       fetch('<?=$base?>api/obtener_config.php?v=' + Date.now())
         .then(res => res.json())

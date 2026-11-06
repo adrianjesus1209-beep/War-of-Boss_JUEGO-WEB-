@@ -7,7 +7,8 @@
         "enlace_descarga": "https:\/\/www.mediafire.com\/file\/xo56ti9x97eshdn\/juego.rar\/file"
     },
     "multimedia": {
-        "fondo": "uploads\/imagenes\/fondo.webp",
+        "fondo": "uploads\/imagenes\/fondo.mp4",
+        "fondo_claro": "uploads\/imagenes\/fondo_claro.mp4",
         "logo_claro": "uploads\/imagenes\/logo_claro.webp",
         "logo_oscuro": "uploads\/imagenes\/logo_oscuro.webp",
         "audio_clic": "uploads\/audio\/audio_clic.mp3",
@@ -64,7 +65,7 @@
     "novedades": [
         {
             "id": 1,
-            "tag": "ACTUALIZACIÓN v0.8.4",
+            "tag": "ACTUALIZACION v0.8.4",
             "tag_color": "#1684e3",
             "fecha": "22 JUL 2026",
             "titulo": "NUEVAS ARENAS Y JEFES PROCEDURALES",
@@ -83,7 +84,7 @@
             "tag": "MODO BOSS RUSH",
             "tag_color": "#ff0033",
             "fecha": "02 AGO 2026",
-            "titulo": "DESAFÍO CONTRA RELOJ DISPONIBLE",
+            "titulo": "DESAFIO CONTRA RELOJ DISPONIBLE",
             "descripcion": "Pon a prueba tus reflejos en el nuevo modo desafío donde enfrentarás a todos los jefes consecutivamente con recursos limitados."
         },
         {
@@ -99,16 +100,24 @@
             "tag": "COMUNIDAD",
             "tag_color": "#8b5cf6",
             "fecha": "20 AGO 2026",
-            "titulo": "TABLA DE CLASIFICACIÓN GLOBAL",
+            "titulo": "TABLA DE CLASIFICACION GLOBAL",
             "descripcion": "Muy pronto podrás competir por los mejores tiempos de victoria contra jefes en nuestra tabla de récords mundiales."
         },
         {
             "id": 6,
-            "tag": "OPTIMIZACIÓN",
+            "tag": "OPTIMIZACION",
             "tag_color": "#10b981",
             "fecha": "05 SEP 2026",
             "titulo": "MEJORAS DE RENDIMIENTO A 60 FPS",
             "descripcion": "Optimización profunda del renderizado de partículas y soporte nativo para mandos retro arcade por USB."
+        },
+        {
+            "id": 7,
+            "tag": "NUEVA ACTUALIZACION",
+            "tag_color": "#ff0033",
+            "fecha": "HOY",
+            "titulo": "Título de la Novedad",
+            "descripcion": "Descripción de la novedad..."
         }
     ],
     "caracteristicas": [

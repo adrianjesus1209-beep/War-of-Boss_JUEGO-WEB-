@@ -4,7 +4,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WAR OF BOSS</title>
+  <title>WAR OF BOSS - Videojuego de Acción Retro Arcade</title>
+  <meta name="description" content="Domina la arena. Desafía a los titanes. Sobrevive a la guerra de jefes en este shooter de acción retro arcade chiptune.">
+  <meta name="theme-color" content="#ff0033">
+  <!-- Open Graph / Redes Sociales -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="WAR OF BOSS">
+  <meta property="og:description" content="Domina la arena. Desafía al jefe que aprenderá de tus movimientos. Sobrevive a la guerra de jefes.">
+  <meta property="og:image" content="<?=$base?>uploads/imagenes/logo_oscuro.webp">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="WAR OF BOSS">
+  <meta name="twitter:description" content="Domina la arena. Desafía a los titanes. Sobrevive a la guerra de jefes.">
   <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
   <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
   <link rel="preconnect" href="https://cdn.tailwindcss.com" crossorigin>
@@ -27,10 +37,11 @@
     }
   </script>
   <link rel="icon" id="favicon" href="<?=$base?>uploads/imagenes/favicon.png" type="image/png">
-  <link rel="stylesheet" href="<?=$base?>css/estilos.css">
+  <link rel="stylesheet" href="<?=$base?>css/estilos.css?v=<?=filemtime(__DIR__ . '/../css/estilos.css')?>">
   <script>
     (function() {
-      var saved = localStorage.getItem('theme');
+      var params = new URLSearchParams(window.location.search);
+      var saved = params.get('theme') || localStorage.getItem('theme');
       var favicon = document.getElementById('favicon');
       if (saved === 'light') {
         document.documentElement.classList.remove('dark');
@@ -40,8 +51,8 @@
       if (favicon) favicon.href = '<?=$base?>uploads/imagenes/favicon.png';
     })();
   </script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
 </head>
 
 <body id="top">
@@ -51,8 +62,8 @@
     <div class="mx-auto flex max-w-[1400px] items-center justify-between px-6 py-3">
 
       <a href="<?=$base?>index.php" class="flex items-center gap-2">
-        <img src="<?=$base?>uploads/imagenes/logo_oscuro.png" alt="" class="logo-dark h-8 sm:h-10">
-        <img src="<?=$base?>uploads/imagenes/logo_claro.png" alt="" class="logo-light h-8 sm:h-10">
+        <img src="<?=$base?>uploads/imagenes/logo_oscuro.webp" alt="WAR OF BOSS" class="logo-dark h-8 sm:h-10">
+        <img src="<?=$base?>uploads/imagenes/logo_claro.webp" alt="WAR OF BOSS" class="logo-light h-8 sm:h-10">
         <span class="glitch font-pixel text-[11px] sm:text-[10px] tracking-widest text-white/90 nav-glitch" data-text="WAR OF BOSS">WAR OF BOSS</span>
       </a>
 
@@ -138,7 +149,7 @@
     </div>
   </div>
 
-  <audio id="bg-music" src="<?=$base?>uploads/audio/audio_musica.mp3" loop preload="auto"></audio>
+  <audio id="bg-music" src="<?=$base?>uploads/audio/audio_musica.mp3" loop preload="none"></audio>
 
   <script>
   document.addEventListener("DOMContentLoaded", () => {
@@ -212,6 +223,7 @@
       if (favicon) favicon.href = '<?=$base?>uploads/imagenes/favicon.png';
       localStorage.setItem('theme', theme);
       updateThemeIcon();
+      window.dispatchEvent(new CustomEvent('themeChanged', { detail: { theme: theme } }));
     }
 
     themeToggle.addEventListener('click', () => {

@@ -47,11 +47,18 @@ function obtener_tamano_directorio($dir, $excluidas) {
 }
 
 $raiz_proyecto = __DIR__ . '/..';
-try {
-    $bytes_usados = obtener_tamano_directorio($raiz_proyecto, $carpetas_excluidas);
-    $mb_usados = round($bytes_usados / 1048576, 2);
-} catch (Exception $e) {
-    $mb_usados = 0;
+$cache_ttl = 300; // 5 minutos de caché para evitar sobrecargar el disco con escaneos recursivos constantes
+if (isset($_SESSION['cached_host_status_time']) && (time() - $_SESSION['cached_host_status_time']) < $cache_ttl && isset($_SESSION['cached_host_mb_usados'])) {
+    $mb_usados = $_SESSION['cached_host_mb_usados'];
+} else {
+    try {
+        $bytes_usados = obtener_tamano_directorio($raiz_proyecto, $carpetas_excluidas);
+        $mb_usados = round($bytes_usados / 1048576, 2);
+        $_SESSION['cached_host_mb_usados'] = $mb_usados;
+        $_SESSION['cached_host_status_time'] = time();
+    } catch (Exception $e) {
+        $mb_usados = $_SESSION['cached_host_mb_usados'] ?? 0;
+    }
 }
 
 echo json_encode([

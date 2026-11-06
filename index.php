@@ -1,11 +1,36 @@
-<?php $base = ''; ?>
+<?php 
+$base = ''; 
+$configRaw = file_exists(__DIR__ . '/api/config.json') ? file_get_contents(__DIR__ . '/api/config.json') : '{}';
+?>
+<script>window.initialConfig = <?=$configRaw?>;</script>
 <?php include 'includes/header.php'; ?>
 
   <main class="hero-bg relative overflow-hidden">
 
     <div class="crt-overlay"></div>
 
+    <div class="hero-zoom-backdrop"></div>
+
+    <button type="button" class="hero-zoom-close" aria-label="Cerrar zoom">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+    </button>
+
+    <!-- Barra flotante de audio para el video en zoom -->
+    <div class="hero-zoom-audio-bar" id="hero-zoom-audio-bar" role="toolbar" aria-label="Control de volumen del video">
+      <button type="button" class="hero-zoom-vol-btn" id="hero-zoom-vol-btn" aria-label="Silenciar o activar volumen">
+        <svg id="hero-zoom-vol-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+          <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+        </svg>
+      </button>
+      <input type="range" id="hero-zoom-volume-slider" class="volume-slider hero-video-slider" min="0" max="100" value="20" aria-label="Volumen del video">
+      <span class="hero-zoom-vol-text font-retro text-sm text-white/90 min-w-[34px] text-right" id="hero-zoom-vol-text">20%</span>
+    </div>
+
     <div class="hero-bg-image"></div>
+    <video class="hero-bg-video hidden" autoplay muted loop playsinline preload="metadata"></video>
 
     <div class="vignette"></div>
 
@@ -19,7 +44,7 @@
         </h1>
       </div>
 
-      <p class="fade-in fade-in-delay mb-12 text-center font-retro text-xl tracking-wide text-white/60 sm:text-3xl">
+      <p class="fade-in fade-in-delay mb-12 text-center font-retro text-xl tracking-wide text-white/80 sm:text-3xl">
         Domina la arena. Desafía a los titanes. Sobrevive a la guerra de jefes.
       </p>
 
@@ -41,7 +66,7 @@
   <section id="gallery-entrance" class="gallery-entrance">
     <div class="gallery-grid"></div>
     <div class="gallery-entrance-text">
-      <h2 class="gallery-title section-glitch font-pixel text-2xl sm:text-4xl tracking-[0.5em] text-white" data-text="GALERÍA">GALERÍA</h2>
+      <h2 class="gallery-title section-glitch font-pixel text-2xl sm:text-4xl tracking-[0.5em] text-white" data-text="GALERIA">GALERIA</h2>
       <div class="scroll-indicator mt-4 flex flex-col items-center gap-4 mb-4">
         <div class="chevron-down"></div>
       </div>
@@ -54,16 +79,16 @@
 
       <canvas id="starfield-canvas" class="starfield-canvas"></canvas>
       <div class="carousel-stage" id="carousel-stage">
-        <div class="carousel-card" data-index="0"><img src="uploads/galeria/foto_0.webp" alt="Foto 01" loading="lazy" decoding="async" fetchpriority="low"></div>
-        <div class="carousel-card" data-index="1"><img src="uploads/galeria/foto_1.webp" alt="Foto 02" loading="lazy" decoding="async" fetchpriority="low"></div>
-        <div class="carousel-card" data-index="2"><img src="uploads/galeria/foto_2.webp" alt="Foto 03" loading="lazy" decoding="async" fetchpriority="low"></div>
-        <div class="carousel-card" data-index="3"><img src="uploads/galeria/foto_3.webp" alt="Foto 04" loading="lazy" decoding="async" fetchpriority="low"></div>
-        <div class="carousel-card" data-index="4"><img src="uploads/galeria/foto_4.webp" alt="Foto 05" loading="lazy" decoding="async" fetchpriority="low"></div>
-        <div class="carousel-card" data-index="5"><img src="uploads/galeria/foto_5.webp" alt="Foto 06" loading="lazy" decoding="async" fetchpriority="low"></div>
-        <div class="carousel-card" data-index="6"><img src="uploads/galeria/foto_0.webp" alt="Foto 07" loading="lazy" decoding="async" fetchpriority="low"></div>
-        <div class="carousel-card" data-index="7"><img src="uploads/galeria/foto_1.webp" alt="Foto 08" loading="lazy" decoding="async" fetchpriority="low"></div>
-        <div class="carousel-card" data-index="8"><img src="uploads/galeria/foto_2.webp" alt="Foto 09" loading="lazy" decoding="async" fetchpriority="low"></div>
-        <div class="carousel-card" data-index="9"><img src="uploads/galeria/foto_3.webp" alt="Foto 10" loading="lazy" decoding="async" fetchpriority="low"></div>
+        <div class="carousel-card" data-index="0"><img src="uploads/galeria/foto_0.webp" alt="Foto 01" loading="eager" decoding="async"></div>
+        <div class="carousel-card" data-index="1"><img src="uploads/galeria/foto_1.webp" alt="Foto 02" loading="eager" decoding="async"></div>
+        <div class="carousel-card" data-index="2"><img src="uploads/galeria/foto_2.webp" alt="Foto 03" loading="eager" decoding="async"></div>
+        <div class="carousel-card" data-index="3"><img src="uploads/galeria/foto_3.webp" alt="Foto 04" loading="lazy" decoding="async"></div>
+        <div class="carousel-card" data-index="4"><img src="uploads/galeria/foto_4.webp" alt="Foto 05" loading="lazy" decoding="async"></div>
+        <div class="carousel-card" data-index="5"><img src="uploads/galeria/foto_5.webp" alt="Foto 06" loading="lazy" decoding="async"></div>
+        <div class="carousel-card" data-index="6"><img src="uploads/galeria/foto_6.webp" alt="Foto 07" loading="lazy" decoding="async"></div>
+        <div class="carousel-card" data-index="7"><img src="uploads/galeria/foto_7.webp" alt="Foto 08" loading="lazy" decoding="async"></div>
+        <div class="carousel-card" data-index="8"><img src="uploads/galeria/foto_8.webp" alt="Foto 09" loading="lazy" decoding="async"></div>
+        <div class="carousel-card" data-index="9"><img src="uploads/galeria/foto_9.webp" alt="Foto 10" loading="lazy" decoding="async"></div>
       </div>
     </div>
   </section>
@@ -153,12 +178,12 @@
 
 <?php include 'includes/footer.php'; ?>
 
-  <!-- Scripts Modulares -->
-  <script src="js/starfield.js"></script>
-  <script src="js/carousel-3d.js"></script>
-  <script src="js/lightbox.js"></script>
-  <script src="js/features-modal.js"></script>
-  <script src="js/figura-particles.js"></script>
-  <script src="js/landing.js"></script>
+  <!-- Scripts Modulares con Cache-Busting -->
+  <script src="js/starfield.js?v=<?=filemtime(__DIR__ . '/js/starfield.js')?>" defer></script>
+  <script src="js/carousel-3d.js?v=<?=filemtime(__DIR__ . '/js/carousel-3d.js')?>" defer></script>
+  <script src="js/lightbox.js?v=<?=filemtime(__DIR__ . '/js/lightbox.js')?>" defer></script>
+  <script src="js/features-modal.js?v=<?=filemtime(__DIR__ . '/js/features-modal.js')?>" defer></script>
+  <script src="js/figura-particles.js?v=<?=filemtime(__DIR__ . '/js/figura-particles.js')?>" defer></script>
+  <script src="js/landing.js?v=<?=filemtime(__DIR__ . '/js/landing.js')?>" defer></script>
 </body>
 </html>

@@ -6,8 +6,31 @@
     Header set Referrer-Policy "strict-origin-when-cross-origin"
 </IfModule>
 
+# Caching & Performance Optimizations
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType image/webp "access plus 1 month"
+    ExpiresByType image/png "access plus 1 month"
+    ExpiresByType image/jpeg "access plus 1 month"
+    ExpiresByType image/gif "access plus 1 month"
+    ExpiresByType video/mp4 "access plus 1 month"
+    ExpiresByType video/webm "access plus 1 month"
+    ExpiresByType audio/mpeg "access plus 1 month"
+    ExpiresByType text/css "access plus 1 week"
+    ExpiresByType application/javascript "access plus 1 week"
+</IfModule>
+
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css application/javascript application/json
+</IfModule>
+
 # Deny access to hidden files
 <FilesMatch "^\.">
+    Require all denied
+</FilesMatch>
+
+# Deny access to sensitive files (SQL backups, logs, configs)
+<FilesMatch "\.(sql|log|ini|env|sh|bak)$">
     Require all denied
 </FilesMatch>
 

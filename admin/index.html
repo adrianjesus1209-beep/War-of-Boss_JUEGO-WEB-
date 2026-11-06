@@ -625,51 +625,92 @@
 
           <!-- TAB 6: IMÁGENES & LOGOS (HERO & BRANDING) -->
           <div id="tab-multimedia" class="tab-content hidden space-y-6">
-            <div class="card p-6 space-y-4">
-              <h3 class="text-sm font-bold text-white uppercase tracking-wider border-b border-white/10 pb-2">Imágenes Principales (Fondo & Logos)</h3>
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- Fondo Hero -->
-                <div class="bg-[#121215] p-4 rounded-lg border border-white/5 space-y-3">
-                  <label class="block text-xs font-bold text-white">Imagen de Fondo (Hero)</label>
-                  <div class="preview-box rounded-lg overflow-hidden border border-white/5 bg-black/40 mb-2" style="height:140px">
-                    <img id="preview-fondo" src="" alt="Preview Fondo" class="w-full h-full object-cover" style="display:none">
-                    <div id="preview-fondo-placeholder" class="w-full h-full flex items-center justify-center text-zinc-600 text-xs">Sin previsualización</div>
+            <div class="card p-6 space-y-6">
+              
+              <!-- FONDOS DEL HERO (MODO OSCURO Y MODO CLARO) -->
+              <div>
+                <h3 class="text-sm font-bold text-white uppercase tracking-wider border-b border-white/10 pb-2 mb-4 flex items-center gap-2">
+                  <span class="inline-block w-2 h-2 rounded-full bg-[#ff0033]"></span>
+                  Fondos del Hero (Modo Oscuro & Modo Claro)
+                </h3>
+                <p class="text-xs text-zinc-400 mb-4">Puedes configurar un video (.mp4, .webm), GIF animado o imagen estática independiente para cada modo visual.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <!-- Fondo Hero Modo Oscuro -->
+                  <div class="bg-[#121215] p-4 rounded-lg border border-white/5 space-y-3">
+                    <div class="flex items-center justify-between">
+                      <label class="block text-xs font-bold text-white">🌙 Fondo Hero — Modo Oscuro</label>
+                      <span class="text-[10px] text-zinc-500 uppercase font-mono">Video / GIF / Img</span>
+                    </div>
+                    <div class="preview-box rounded-lg overflow-hidden border border-white/5 bg-black/40 mb-2 relative" style="height:150px">
+                      <img id="preview-fondo" src="" alt="Preview Fondo Oscuro" class="w-full h-full object-cover" style="display:none">
+                      <video id="preview-fondo-video" autoplay muted loop playsinline class="w-full h-full object-cover" style="display:none"></video>
+                      <div id="preview-fondo-placeholder" class="w-full h-full flex items-center justify-center text-zinc-600 text-xs">Sin previsualización</div>
+                    </div>
+                    <input type="text" id="media-fondo" class="input-field" placeholder="Ruta local o URL (.mp4, .webm, .gif, .webp, .jpg)">
+                    <div class="flex items-center gap-2">
+                      <input type="file" id="file-fondo" accept="image/*,video/mp4,video/webm" class="hidden">
+                      <button type="button" onclick="document.getElementById('file-fondo').click()" class="btn-secondary text-xs w-full">Subir Fondo Oscuro</button>
+                      <span id="status-fondo" class="text-xs text-zinc-500"></span>
+                    </div>
                   </div>
-                  <input type="text" id="media-fondo" class="input-field" placeholder="Ruta local o URL ImgBB">
-                  <div class="flex items-center gap-2">
-                    <input type="file" id="file-fondo" accept="image/*" class="hidden">
-                    <button type="button" onclick="document.getElementById('file-fondo').click()" class="btn-secondary text-xs w-full">Subir Nuevo Fondo</button>
-                    <span id="status-fondo" class="text-xs text-zinc-500"></span>
+
+                  <!-- Fondo Hero Modo Claro -->
+                  <div class="bg-[#121215] p-4 rounded-lg border border-white/5 space-y-3">
+                    <div class="flex items-center justify-between">
+                      <label class="block text-xs font-bold text-white">☀️ Fondo Hero — Modo Claro</label>
+                      <span class="text-[10px] text-zinc-500 uppercase font-mono">Video / GIF / Img</span>
+                    </div>
+                    <div class="preview-box rounded-lg overflow-hidden border border-white/5 bg-black/40 mb-2 relative" style="height:150px">
+                      <img id="preview-fondo-claro" src="" alt="Preview Fondo Claro" class="w-full h-full object-cover" style="display:none">
+                      <video id="preview-fondo-claro-video" autoplay muted loop playsinline class="w-full h-full object-cover" style="display:none"></video>
+                      <div id="preview-fondo-claro-placeholder" class="w-full h-full flex items-center justify-center text-zinc-600 text-xs">Sin previsualización</div>
+                    </div>
+                    <input type="text" id="media-fondo-claro" class="input-field" placeholder="Ruta local o URL (.mp4, .webm, .gif, .webp, .jpg)">
+                    <div class="flex items-center gap-2">
+                      <input type="file" id="file-fondo-claro" accept="image/*,video/mp4,video/webm" class="hidden">
+                      <button type="button" onclick="document.getElementById('file-fondo-claro').click()" class="btn-secondary text-xs w-full">Subir Fondo Claro</button>
+                      <span id="status-fondo-claro" class="text-xs text-zinc-500"></span>
+                    </div>
                   </div>
                 </div>
+              </div>
 
-                <!-- Logo Claro -->
-                <div class="bg-[#121215] p-4 rounded-lg border border-white/5 space-y-3">
-                  <label class="block text-xs font-bold text-white">Logo Claro</label>
-                  <div class="preview-box rounded-lg overflow-hidden border border-white/5 bg-black/40 mb-2" style="height:140px">
-                    <img id="preview-logo-claro" src="" alt="Preview Logo Claro" class="w-full h-full object-contain p-3" style="display:none">
-                    <div id="preview-logo-claro-placeholder" class="w-full h-full flex items-center justify-center text-zinc-600 text-xs">Sin previsualización</div>
+              <!-- LOGOTIPOS (MODO CLARO & MODO OSCURO) -->
+              <div>
+                <h3 class="text-sm font-bold text-white uppercase tracking-wider border-b border-white/10 pb-2 mb-4 flex items-center gap-2">
+                  <span class="inline-block w-2 h-2 rounded-full bg-blue-500"></span>
+                  Logotipos de Marca
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <!-- Logo Claro -->
+                  <div class="bg-[#121215] p-4 rounded-lg border border-white/5 space-y-3">
+                    <label class="block text-xs font-bold text-white">☀️ Logo para Fondo Claro</label>
+                    <div class="preview-box rounded-lg overflow-hidden border border-white/5 bg-black/40 mb-2" style="height:140px">
+                      <img id="preview-logo-claro" src="" alt="Preview Logo Claro" class="w-full h-full object-contain p-3" style="display:none">
+                      <div id="preview-logo-claro-placeholder" class="w-full h-full flex items-center justify-center text-zinc-600 text-xs">Sin previsualización</div>
+                    </div>
+                    <input type="text" id="media-logo-claro" class="input-field">
+                    <div class="flex items-center gap-2">
+                      <input type="file" id="file-logo-claro" accept="image/*" class="hidden">
+                      <button type="button" onclick="document.getElementById('file-logo-claro').click()" class="btn-secondary text-xs w-full">Subir Logo Claro</button>
+                      <span id="status-logo-claro" class="text-xs text-zinc-500"></span>
+                    </div>
                   </div>
-                  <input type="text" id="media-logo-claro" class="input-field">
-                  <div class="flex items-center gap-2">
-                    <input type="file" id="file-logo-claro" accept="image/*" class="hidden">
-                    <button type="button" onclick="document.getElementById('file-logo-claro').click()" class="btn-secondary text-xs w-full">Subir Logo Claro</button>
-                    <span id="status-logo-claro" class="text-xs text-zinc-500"></span>
-                  </div>
-                </div>
 
-                <!-- Logo Oscuro -->
-                <div class="bg-[#121215] p-4 rounded-lg border border-white/5 space-y-3">
-                  <label class="block text-xs font-bold text-white">Logo Oscuro</label>
-                  <div class="preview-box rounded-lg overflow-hidden border border-white/5 bg-black/40 mb-2" style="height:140px">
-                    <img id="preview-logo-oscuro" src="" alt="Preview Logo Oscuro" class="w-full h-full object-contain p-3" style="display:none">
-                    <div id="preview-logo-oscuro-placeholder" class="w-full h-full flex items-center justify-center text-zinc-600 text-xs">Sin previsualización</div>
-                  </div>
-                  <input type="text" id="media-logo-oscuro" class="input-field">
-                  <div class="flex items-center gap-2">
-                    <input type="file" id="file-logo-oscuro" accept="image/*" class="hidden">
-                    <button type="button" onclick="document.getElementById('file-logo-oscuro').click()" class="btn-secondary text-xs w-full">Subir Logo Oscuro</button>
-                    <span id="status-logo-oscuro" class="text-xs text-zinc-500"></span>
+                  <!-- Logo Oscuro -->
+                  <div class="bg-[#121215] p-4 rounded-lg border border-white/5 space-y-3">
+                    <label class="block text-xs font-bold text-white">🌙 Logo para Fondo Oscuro</label>
+                    <div class="preview-box rounded-lg overflow-hidden border border-white/5 bg-black/40 mb-2" style="height:140px">
+                      <img id="preview-logo-oscuro" src="" alt="Preview Logo Oscuro" class="w-full h-full object-contain p-3" style="display:none">
+                      <div id="preview-logo-oscuro-placeholder" class="w-full h-full flex items-center justify-center text-zinc-600 text-xs">Sin previsualización</div>
+                    </div>
+                    <input type="text" id="media-logo-oscuro" class="input-field">
+                    <div class="flex items-center gap-2">
+                      <input type="file" id="file-logo-oscuro" accept="image/*" class="hidden">
+                      <button type="button" onclick="document.getElementById('file-logo-oscuro').click()" class="btn-secondary text-xs w-full">Subir Logo Oscuro</button>
+                      <span id="status-logo-oscuro" class="text-xs text-zinc-500"></span>
+                    </div>
                   </div>
                 </div>
               </div>

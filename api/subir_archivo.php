@@ -23,7 +23,7 @@ if (!isset($_FILES['archivo']) || $_FILES['archivo']['error'] !== UPLOAD_ERR_OK)
 $archivo = $_FILES['archivo'];
 $tipo_recurso = $_POST['tipo_recurso'] ?? '';
 
-$tipos_permitidos = ['fondo', 'logo_claro', 'logo_oscuro', 'feat_0', 'feat_1', 'feat_2', 'audio_clic', 'audio_musica'];
+$tipos_permitidos = ['fondo', 'fondo_claro', 'logo_claro', 'logo_oscuro', 'feat_0', 'feat_1', 'feat_2', 'audio_clic', 'audio_musica'];
 $es_foto = preg_match('/^foto_\d+$/', $tipo_recurso) === 1;
 
 if (!in_array($tipo_recurso, $tipos_permitidos) && !$es_foto) {
@@ -34,6 +34,10 @@ if (!in_array($tipo_recurso, $tipos_permitidos) && !$es_foto) {
 
 $ext = strtolower(pathinfo($archivo['name'], PATHINFO_EXTENSION));
 $extensiones_permitidas = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'mp3', 'ogg', 'wav'];
+if ($tipo_recurso === 'fondo' || $tipo_recurso === 'fondo_claro') {
+    $extensiones_permitidas[] = 'mp4';
+    $extensiones_permitidas[] = 'webm';
+}
 
 if (!in_array($ext, $extensiones_permitidas)) {
     http_response_code(400);
@@ -46,8 +50,11 @@ $mime = finfo_file($finfo, $archivo['tmp_name']);
 finfo_close($finfo);
 $mimes_imagen = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
 $mimes_audio = ['audio/mpeg', 'audio/ogg', 'audio/wav', 'audio/wave', 'audio/x-wav'];
+$mimes_video = ['video/mp4', 'video/webm'];
 
-if (!in_array($mime, $mimes_imagen) && !in_array($mime, $mimes_audio)) {
+$mime_valido = in_array($mime, $mimes_imagen) || in_array($mime, $mimes_audio) || (($tipo_recurso === 'fondo' || $tipo_recurso === 'fondo_claro') && in_array($mime, $mimes_video));
+
+if (!$mime_valido) {
     http_response_code(400);
     echo json_encode(['error' => 'El contenido del archivo no coincide con un formato permitido.']);
     exit;
@@ -55,7 +62,7 @@ if (!in_array($mime, $mimes_imagen) && !in_array($mime, $mimes_audio)) {
 
 $uploads_dir_base = __DIR__ . '/../uploads';
 
-if (in_array($tipo_recurso, ['fondo', 'logo_claro', 'logo_oscuro'])) {
+if (in_array($tipo_recurso, ['fondo', 'fondo_claro', 'logo_claro', 'logo_oscuro'])) {
     $subcarpeta = 'imagenes';
 } elseif ($es_foto) {
     $subcarpeta = 'galeria';

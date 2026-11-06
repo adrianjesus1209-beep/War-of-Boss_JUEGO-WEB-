@@ -21,7 +21,7 @@ if (is_array($nuevo_config)) {
         }
     }
 
-    if (file_put_contents($config_path, json_encode($filtered, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE))) {
+    if (file_put_contents($config_path, json_encode($filtered, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX)) {
         echo json_encode(['success' => true, 'mensaje' => 'Configuración guardada exitosamente']);
     } else {
         http_response_code(500);
