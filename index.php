@@ -114,16 +114,17 @@ $novedades = $configData['novedades'] ?? [];
 
       <canvas id="starfield-canvas" class="starfield-canvas"></canvas>
       <div class="carousel-stage" id="carousel-stage">
-        <div class="carousel-card" data-index="0"><img src="uploads/galeria/foto_0.webp" alt="Foto 01" loading="eager" decoding="async"></div>
-        <div class="carousel-card" data-index="1"><img src="uploads/galeria/foto_1.webp" alt="Foto 02" loading="eager" decoding="async"></div>
-        <div class="carousel-card" data-index="2"><img src="uploads/galeria/foto_2.webp" alt="Foto 03" loading="eager" decoding="async"></div>
-        <div class="carousel-card" data-index="3"><img src="uploads/galeria/foto_3.webp" alt="Foto 04" loading="lazy" decoding="async"></div>
-        <div class="carousel-card" data-index="4"><img src="uploads/galeria/foto_4.webp" alt="Foto 05" loading="lazy" decoding="async"></div>
-        <div class="carousel-card" data-index="5"><img src="uploads/galeria/foto_5.webp" alt="Foto 06" loading="lazy" decoding="async"></div>
-        <div class="carousel-card" data-index="6"><img src="uploads/galeria/foto_6.webp" alt="Foto 07" loading="lazy" decoding="async"></div>
-        <div class="carousel-card" data-index="7"><img src="uploads/galeria/foto_7.webp" alt="Foto 08" loading="lazy" decoding="async"></div>
-        <div class="carousel-card" data-index="8"><img src="uploads/galeria/foto_8.webp" alt="Foto 09" loading="lazy" decoding="async"></div>
-        <div class="carousel-card" data-index="9"><img src="uploads/galeria/foto_9.webp" alt="Foto 10" loading="lazy" decoding="async"></div>
+        <?php 
+        $fotosCfg = $configData['multimedia']['fotos'] ?? [];
+        for ($i = 0; $i < 10; $i++):
+          $fotoItem = $fotosCfg[$i] ?? null;
+          $fotoUrl = is_array($fotoItem) ? ($fotoItem['url'] ?? "uploads/galeria/foto_$i.webp") : ($fotoItem ?: "uploads/galeria/foto_$i.webp");
+          $fotoDesc = is_array($fotoItem) ? htmlspecialchars($fotoItem['descripcion'] ?? '') : '';
+          $fotoTime = file_exists(__DIR__ . '/' . $fotoUrl) ? filemtime(__DIR__ . '/' . $fotoUrl) : '1';
+          $loadingAttr = $i < 3 ? 'loading="eager"' : 'loading="lazy"';
+        ?>
+          <div class="carousel-card" data-index="<?=$i?>"><img src="<?=htmlspecialchars($fotoUrl)?>?v=<?=$fotoTime?>" alt="Foto <?=str_pad($i + 1, 2, '0', STR_PAD_LEFT)?>" <?=$loadingAttr?> decoding="async" data-desc="<?=$fotoDesc?>"></div>
+        <?php endfor; ?>
       </div>
     </div>
   </section>

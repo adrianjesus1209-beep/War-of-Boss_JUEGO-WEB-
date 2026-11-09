@@ -2,14 +2,20 @@
 header('Content-Type: application/json; charset=utf-8');
 
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
-$allowed_origins = ['http://localhost', 'http://127.0.0.1'];
-if (in_array($origin, $allowed_origins)) {
-    header('Access-Control-Allow-Origin: ' . $origin);
-} elseif (isset($_SERVER['HTTP_HOST'])) {
-    $host = $_SERVER['HTTP_HOST'];
-    if ($host === 'localhost' || $host === '127.0.0.1' || explode(':', $host)[0] === 'localhost') {
-        header('Access-Control-Allow-Origin: http://' . $host);
+$http_host = $_SERVER['HTTP_HOST'] ?? '';
+if ($origin) {
+    $origin_host = parse_url($origin, PHP_URL_HOST);
+    $server_host = explode(':', $http_host)[0];
+    if ($origin_host === $server_host || 
+        $origin_host === 'www.' . $server_host || 
+        'www.' . $origin_host === $server_host ||
+        in_array($origin_host, ['localhost', '127.0.0.1'], true)) {
+        header('Access-Control-Allow-Origin: ' . $origin);
+        header('Access-Control-Allow-Credentials: true');
     }
+} elseif ($http_host) {
+    $proto = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https://' : 'http://';
+    header('Access-Control-Allow-Origin: ' . $proto . $http_host);
 }
 
 require_once __DIR__ . '/db_conexion.php';

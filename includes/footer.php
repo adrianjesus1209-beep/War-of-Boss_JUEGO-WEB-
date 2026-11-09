@@ -3,9 +3,13 @@
     <div class="mx-auto max-w-[1200px] px-6">
       <div class="flex flex-col items-center justify-between gap-4 sm:flex-row">
 
+        <?php 
+          $footerLogoOscuroTime = file_exists(__DIR__ . '/../uploads/imagenes/logo_oscuro.webp') ? filemtime(__DIR__ . '/../uploads/imagenes/logo_oscuro.webp') : '1';
+          $footerLogoClaroTime = file_exists(__DIR__ . '/../uploads/imagenes/logo_claro.webp') ? filemtime(__DIR__ . '/../uploads/imagenes/logo_claro.webp') : '1';
+        ?>
         <div class="flex items-center gap-4">
-          <img src="<?=$base?>uploads/imagenes/logo_oscuro.webp" alt="WAR OF BOSS" class="logo-dark h-5 sm:h-6 opacity-70">
-          <img src="<?=$base?>uploads/imagenes/logo_claro.webp" alt="WAR OF BOSS" class="logo-light h-5 sm:h-6 opacity-70">
+          <img src="<?=$base?>uploads/imagenes/logo_oscuro.webp?v=<?=$footerLogoOscuroTime?>" alt="WAR OF BOSS" class="logo-dark h-5 sm:h-6 opacity-70">
+          <img src="<?=$base?>uploads/imagenes/logo_claro.webp?v=<?=$footerLogoClaroTime?>" alt="WAR OF BOSS" class="logo-light h-5 sm:h-6 opacity-70">
         </div>
 
         <div id="footer-redes" class="flex items-center gap-5 flex-wrap">
@@ -24,10 +28,10 @@
       if (!cfg) return;
       if (cfg.multimedia) {
         if (cfg.multimedia.logo_claro) {
-          document.querySelectorAll('.logo-light').forEach(img => img.src = '<?=$base?>' + cfg.multimedia.logo_claro);
+          document.querySelectorAll('.logo-light').forEach(img => img.src = '<?=$base?>' + cfg.multimedia.logo_claro + '?v=<?=$footerLogoClaroTime?>');
         }
         if (cfg.multimedia.logo_oscuro) {
-          document.querySelectorAll('.logo-dark').forEach(img => img.src = '<?=$base?>' + cfg.multimedia.logo_oscuro);
+          document.querySelectorAll('.logo-dark').forEach(img => img.src = '<?=$base?>' + cfg.multimedia.logo_oscuro + '?v=<?=$footerLogoOscuroTime?>');
         }
       }
       const footerRedes = document.getElementById('footer-redes');

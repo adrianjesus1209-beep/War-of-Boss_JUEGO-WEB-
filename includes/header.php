@@ -67,8 +67,12 @@
     <div class="mx-auto flex max-w-[1400px] items-center justify-between px-6 py-3">
 
       <a href="<?=$base?>index.php" class="flex items-center gap-2">
-        <img src="<?=$base?>uploads/imagenes/logo_oscuro.webp" alt="WAR OF BOSS" class="logo-dark h-8 sm:h-10">
-        <img src="<?=$base?>uploads/imagenes/logo_claro.webp" alt="WAR OF BOSS" class="logo-light h-8 sm:h-10">
+        <?php 
+          $logoOscuroTime = file_exists(__DIR__ . '/../uploads/imagenes/logo_oscuro.webp') ? filemtime(__DIR__ . '/../uploads/imagenes/logo_oscuro.webp') : '1';
+          $logoClaroTime = file_exists(__DIR__ . '/../uploads/imagenes/logo_claro.webp') ? filemtime(__DIR__ . '/../uploads/imagenes/logo_claro.webp') : '1';
+        ?>
+        <img src="<?=$base?>uploads/imagenes/logo_oscuro.webp?v=<?=$logoOscuroTime?>" alt="WAR OF BOSS" class="logo-dark h-8 sm:h-10">
+        <img src="<?=$base?>uploads/imagenes/logo_claro.webp?v=<?=$logoClaroTime?>" alt="WAR OF BOSS" class="logo-light h-8 sm:h-10">
         <span class="glitch font-pixel text-[11px] sm:text-[10px] tracking-widest text-white/90 nav-glitch" data-text="WAR OF BOSS">WAR OF BOSS</span>
       </a>
 

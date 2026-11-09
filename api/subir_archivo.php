@@ -16,7 +16,22 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 if (!isset($_FILES['archivo']) || $_FILES['archivo']['error'] !== UPLOAD_ERR_OK) {
     http_response_code(400);
-    echo json_encode(['error' => 'No se recibió ningún archivo o hubo un error al subir.']);
+    $error_msg = 'No se recibió ningún archivo o hubo un error al subir.';
+    if (isset($_FILES['archivo']['error'])) {
+        switch ($_FILES['archivo']['error']) {
+            case UPLOAD_ERR_INI_SIZE:
+            case UPLOAD_ERR_FORM_SIZE:
+                $error_msg = 'El archivo supera el tamaño máximo permitido por el servidor (upload_max_filesize).';
+                break;
+            case UPLOAD_ERR_PARTIAL:
+                $error_msg = 'El archivo solo se subió parcialmente.';
+                break;
+            case UPLOAD_ERR_NO_FILE:
+                $error_msg = 'No se seleccionó ningún archivo para subir.';
+                break;
+        }
+    }
+    echo json_encode(['error' => $error_msg]);
     exit;
 }
 
@@ -109,7 +124,9 @@ if (in_array($mime, $mimes_imagen) && function_exists('imagewebp')) {
     if ($src_img) {
         $webp_path = $uploads_dir . '/' . $tipo_recurso . '.webp';
         if (imagewebp($src_img, $webp_path, 70)) {
-            @unlink($destino_absoluto);
+            if ($destino_absoluto !== $webp_path && is_file($destino_absoluto)) {
+                @unlink($destino_absoluto);
+            }
             $ruta_relativa = 'uploads/' . $subcarpeta . '/' . $tipo_recurso . '.webp';
         }
         imagedestroy($src_img);
